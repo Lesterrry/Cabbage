@@ -21,6 +21,7 @@
 		A80C069F280CA30500A606D8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		A80C06A1280CA30500A606D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A80C06A2280CA30600A606D8 /* Cabbage.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Cabbage.entitlements; sourceTree = "<group>"; };
+		A80C06AA280CA59B00A606D8 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +60,7 @@
 				A80C069E280CA30500A606D8 /* Main.storyboard */,
 				A80C06A1280CA30500A606D8 /* Info.plist */,
 				A80C06A2280CA30600A606D8 /* Cabbage.entitlements */,
+				A80C06AA280CA59B00A606D8 /* README.md */,
 			);
 			path = Cabbage;
 			sourceTree = "<group>";
@@ -272,6 +274,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Cabbage/Cabbage.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 9Q6UB3UBW7;
@@ -293,6 +296,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Cabbage/Cabbage.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 9Q6UB3UBW7;
