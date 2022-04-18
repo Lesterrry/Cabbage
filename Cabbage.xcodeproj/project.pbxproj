@@ -38,6 +38,7 @@
 		A80C068C280CA2DE00A606D8 = {
 			isa = PBXGroup;
 			children = (
+				A80C06AA280CA59B00A606D8 /* README.md */,
 				A80C0697280CA2DF00A606D8 /* Cabbage */,
 				A80C0696280CA2DF00A606D8 /* Products */,
 			);
@@ -60,7 +61,6 @@
 				A80C069E280CA30500A606D8 /* Main.storyboard */,
 				A80C06A1280CA30500A606D8 /* Info.plist */,
 				A80C06A2280CA30600A606D8 /* Cabbage.entitlements */,
-				A80C06AA280CA59B00A606D8 /* README.md */,
 			);
 			path = Cabbage;
 			sourceTree = "<group>";
