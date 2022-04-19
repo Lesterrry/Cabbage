@@ -176,17 +176,42 @@ class ViewController: NSViewController {
 		showCookingMessage()
 		if batchCookEnabled {
 			for i in files {
-				Kitchen.cook(i, with: fileManager)
+				do {
+					files[currentIndex] = try Kitchen.cook(i, with: fileManager)
+				} catch let err {
+					#if DEBUG
+					print(err.localizedDescription)
+					#endif
+				}
 			}
 		} else {
 			if currentFileType == .raw {
-				Kitchen.cook(files[currentIndex], with: fileManager)
+				do {
+					files[currentIndex] = try Kitchen.cook(files[currentIndex], with: fileManager)
+				} catch let err {
+					displayAlert(title: Strings.RECOVERABLE_COOKINGCATASTROPHE, message: err.localizedDescription, buttons: Strings.FINE)
+				}
 			} else {
-				Kitchen.uncook(files[currentIndex], with: fileManager)
+				do {
+					files[currentIndex] = try Kitchen.uncook(files[currentIndex], with: fileManager)
+				} catch let err {
+					displayAlert(title: Strings.RECOVERABLE_COOKINGCATASTROPHE, message: err.localizedDescription, buttons: Strings.FINE)
+				}
 			}
 		}
 		drawFile(files[currentIndex])
 	}
+	
+	@discardableResult
+		func displayAlert(title: String, message: String, buttons: String...) -> Int {
+			let alert = NSAlert()
+			alert.messageText = title
+			alert.informativeText = message
+			for button in buttons{
+				alert.addButton(withTitle: button)
+			}
+			return alert.runModal().rawValue
+		}
 	
 	func drawQuickLookPreview(with path: String) {
 		let quickLookView = QLPreviewView()
@@ -255,20 +280,24 @@ class ViewController: NSViewController {
 					currentFileType = .undercooked
 					fileInfoStatusLabel.stringValue = Strings.UNDERCOOKED
 					fileInfoStatusLabel.textColor = NSColor.systemYellow
-					fileInfoCookButton.stringValue = Strings.UNCOOK
+					fileInfoCookButton.title = Strings.UNCOOK
 					let decooked = file.deletingPathExtension()
 					drawQuickLookPreview(with: decooked.path)
 				case Strings.DEEPFRIED_FILE_EXTENSION:    // Deep-fried file
 					currentFileType = .deepfried
 					fileInfoStatusLabel.stringValue = Strings.DEEPFRIED
 					fileInfoStatusLabel.textColor = NSColor.systemGreen
-					fileInfoCookButton.stringValue = Strings.UNCOOK
-					drawImage(with: Kitchen.cookedData(from: file, with: fileManager))
+					fileInfoCookButton.title = Strings.UNCOOK
+					do {
+					try drawImage(with: Kitchen.cookedData(from: file, with: fileManager))
+					} catch let err {
+						displayAlert(title: Strings.RECOVERABLE_COOKINGDATACATASTROPHE, message: err.localizedDescription, buttons: Strings.FINE)
+					}
 				default:                                  // Raw file
 					currentFileType = .raw
 					fileInfoStatusLabel.stringValue = Strings.RAW
 					fileInfoStatusLabel.textColor = NSColor.secondaryLabelColor
-					fileInfoCookButton.stringValue = Strings.COOK
+					fileInfoCookButton.title = Strings.COOK
 					drawQuickLookPreview(with: file.path)
 				}
 			}
