@@ -30,9 +30,9 @@ class ViewController: NSViewController {
 	//*********************************************************************
 	@IBOutlet weak var chooseFilesButton: NSButton!
 	@IBAction func chooseFilesButtonPressed(_ sender: Any) {
-		onboardingMessageStackView.isHidden = true
-		drawQuickLookPreview(with: "/Users/ajdarnasibullin/Downloads/w.mov")
+		askForFiles()
 	}
+	@IBOutlet weak var fileSequenceStackView: NSStackView!
 	@IBOutlet weak var fileSequenceBackButton: NSButton!
 	@IBAction func fileSequenceBackButtonPressed(_ sender: Any) {
 	}
@@ -45,16 +45,19 @@ class ViewController: NSViewController {
 	@IBOutlet weak var fileInfoStatusLabel: NSTextField!
 	@IBOutlet weak var contentView: NSView!
 	@IBOutlet weak var onboardingMessageStackView: NSStackView!
-	@IBOutlet weak var unsupportedFileMessageStackView: NSStackView!
-	@IBAction func unsupportedFileMessageViewRawButtonPressed(_ sender: Any) {
+	@IBOutlet weak var folderMessageStackView: NSStackView!
+	@IBAction func folderMessageDiveButtonPressed(_ sender: Any) {
 	}
 	@IBOutlet weak var kittenImageView: NSImageView!
 	
 	//*********************************************************************
-	// MARK: VARIABLES
+	// MARK: VARIABLES & CONSTS
 	//*********************************************************************
 	var videoPlayer: AVPlayer = AVPlayer()
 	var kittenMode: Bool = false
+	var files: [URL] = []
+	var currentIndex: Int64 = 0
+	let fileManager = FileManager.default
 	
 	//*********************************************************************
 	// MARK: MAIN FUNCTIONS
@@ -110,11 +113,16 @@ class ViewController: NSViewController {
 	}
 	
 	func resetContentView() {
-		for i in contentView.subviews {
+		folderMessageStackView.isHidden = true
+		// FIXME:
+		// Dumbass approach
+		for i in contentView.subviews[2..<contentView.subviews.count] {
 			i.removeFromSuperview()
 		}
-		for i in contentView.layer!.sublayers! {
-			i.removeFromSuperlayer()
+		if let sublayers = contentView.layer!.sublayers {
+			for i in sublayers[2..<sublayers.count] {
+				i.removeFromSuperlayer()
+			}
 		}
 	}
 	
@@ -123,9 +131,7 @@ class ViewController: NSViewController {
 		let quickLookItem = MyQuickLookItem()
 		quickLookItem.previewItemURL = URL(fileURLWithPath: path)
 		quickLookView.previewItem = quickLookItem
-		quickLookView.frame = NSRect(x: 0, y: 0, width: contentView.frame.width, height: contentView.frame.height)
-		quickLookView.autoresizingMask = [.height, .width]
-		contentView.addSubview(quickLookView)
+		placeView(quickLookView)
 	}
 	
 	func drawVideoPlayer(with path: String) {
@@ -143,10 +149,62 @@ class ViewController: NSViewController {
 	
 	func drawImage(with data: Data) {
 		let imageView = NSImageView()
-		imageView.frame = NSRect(x: 0, y: 0, width: contentView.frame.width, height: contentView.frame.height)
-		imageView.autoresizingMask = [.height, .width]
 		//let imageData = Data(contentsOf: <#T##URL#>)
 		imageView.image = NSImage(data: data)
+		placeView(imageView)
+	}
+	
+	func drawFolder() {
+		folderMessageStackView.isHidden = false
+	}
+	
+	func placeView(_ view: NSView) {
+		view.frame = NSRect(x: 0, y: 0, width: contentView.frame.width, height: contentView.frame.height)
+		view.autoresizingMask = [.height, .width]
+		contentView.addSubview(view)
+	}
+	
+	func askForFiles() {
+		let panel = NSOpenPanel()
+		panel.allowsMultipleSelection = true
+		panel.canChooseDirectories = true
+		if panel.runModal() == .OK {
+			guard panel.urls.count > 0 else {
+				return
+			}
+			onboardingMessageStackView.isHidden = true
+			fileSequenceStackView.isHidden = false
+			fileInfoStackView.isHidden = false
+			files = panel.urls
+			drawFile(files[Int(currentIndex)])
+		}
+	}
+	
+	func drawFile(_ file: URL) {
+		resetContentView()
+		var isDir : ObjCBool = false
+		if fileManager.fileExists(atPath: file.path, isDirectory:&isDir) {
+			fileInfoNameLabel.stringValue = file.lastPathComponent
+			if isDir.boolValue {
+				drawFolder()
+			} else {
+				switch file.pathExtension {
+				case Strings.UNDERCOOKED_FILE_EXTENSION:
+					fileInfoStatusLabel.stringValue = Strings.UNDERCOOKED
+					fileInfoStatusLabel.textColor = NSColor.systemYellow
+				case Strings.DEEPFRIED_FILE_EXTENSION:
+					fileInfoStatusLabel.stringValue = Strings.DEEPFRIED
+					fileInfoStatusLabel.textColor = NSColor.systemGreen
+				default:
+					fileInfoStatusLabel.stringValue = Strings.RAW
+					fileInfoStatusLabel.textColor = NSColor.secondaryLabelColor
+				}
+				let decooked = file.deletingPathExtension()
+				print(decooked.pathExtension)
+			}
+		} else {
+			fatalError(Strings.FATAL_NOFILE)
+		}
 	}
 
 }

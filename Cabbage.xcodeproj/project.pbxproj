@@ -11,6 +11,7 @@
 		A80C069B280CA2E000A606D8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A80C069A280CA2E000A606D8 /* ViewController.swift */; };
 		A80C069D280CA30300A606D8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A80C069C280CA30300A606D8 /* Assets.xcassets */; };
 		A80C06A0280CA30500A606D8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A80C069E280CA30500A606D8 /* Main.storyboard */; };
+		A8E8C1DD280E89C900A6E0AA /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E8C1DC280E89C900A6E0AA /* Strings.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +23,7 @@
 		A80C06A1280CA30500A606D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A80C06A2280CA30600A606D8 /* Cabbage.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Cabbage.entitlements; sourceTree = "<group>"; };
 		A80C06AA280CA59B00A606D8 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		A8E8C1DC280E89C900A6E0AA /* Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +59,7 @@
 			children = (
 				A80C0698280CA2E000A606D8 /* AppDelegate.swift */,
 				A80C069A280CA2E000A606D8 /* ViewController.swift */,
+				A8E8C1DC280E89C900A6E0AA /* Strings.swift */,
 				A80C069C280CA30300A606D8 /* Assets.xcassets */,
 				A80C069E280CA30500A606D8 /* Main.storyboard */,
 				A80C06A1280CA30500A606D8 /* Info.plist */,
@@ -135,6 +138,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A80C069B280CA2E000A606D8 /* ViewController.swift in Sources */,
+				A8E8C1DD280E89C900A6E0AA /* Strings.swift in Sources */,
 				A80C0699280CA2E000A606D8 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -284,6 +288,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MARKETING_VERSION = "0.1.0-beta";
 				PRODUCT_BUNDLE_IDENTIFIER = com.Lestercovey.Cabbage;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -306,6 +311,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MARKETING_VERSION = "0.1.0-beta";
 				PRODUCT_BUNDLE_IDENTIFIER = com.Lestercovey.Cabbage;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
