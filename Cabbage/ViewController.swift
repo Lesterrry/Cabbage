@@ -11,16 +11,20 @@ import Quartz
 import AVFoundation
 
 class MainView: NSView {
+	
 	override func performKeyEquivalent(with event: NSEvent) -> Bool {
 		return true
 	}
 	override var acceptsFirstResponder : Bool {
 		return true
 	}
+	
 }
 
 class MyQuickLookItem: NSObject, QLPreviewItem {
+	
 	var previewItemURL: URL!
+	
 }
 
 class ViewController: NSViewController {
@@ -45,13 +49,7 @@ class ViewController: NSViewController {
 	@IBOutlet weak var fileInfoStatusLabel: NSTextField!
 	@IBOutlet weak var fileInfoCookButton: NSButton!
 	@IBAction func fileInfoCookButtonPressed(_ sender: Any) {
-		if batchCookEnabled {
-			
-		} else {
-			resetContentView()
-			cookingMessageStackView.isHidden = false
-			cookingMessageProgressIndicator.startAnimation(nil)
-		}
+		tryCook()
 	}
 	@IBOutlet weak var contentView: NSView!
 	@IBOutlet weak var onboardingMessageStackView: NSStackView!
@@ -68,7 +66,7 @@ class ViewController: NSViewController {
 	var videoPlayer: AVPlayer = AVPlayer()
 	var kittenMode: Bool = false
 	var files: [URL] = []
-	var currentIndex: Int64 = 0
+	var currentIndex: Int = 0
 	var currentFileType = FileType.unknown
 	var batchCookEnabled = false
 	let fileManager = FileManager.default
@@ -154,7 +152,6 @@ class ViewController: NSViewController {
 	func resetContentView() {
 		folderMessageStackView.isHidden = true
 		cookingMessageStackView.isHidden = true
-		// FIXME
 		#warning("Dumbass approach")
 		for i in contentView.subviews[3..<contentView.subviews.count] {
 			i.removeFromSuperview()
@@ -164,6 +161,31 @@ class ViewController: NSViewController {
 				i.removeFromSuperlayer()
 			}
 		}
+	}
+	
+	func showCookingMessage() {
+		resetContentView()
+		cookingMessageStackView.isHidden = false
+		cookingMessageProgressIndicator.startAnimation(nil)
+	}
+	
+	func tryCook() {
+		guard files.count > 0 else {
+			return
+		}
+		showCookingMessage()
+		if batchCookEnabled {
+			for i in files {
+				Kitchen.cook(i, with: fileManager)
+			}
+		} else {
+			if currentFileType == .raw {
+				Kitchen.cook(files[currentIndex], with: fileManager)
+			} else {
+				Kitchen.uncook(files[currentIndex], with: fileManager)
+			}
+		}
+		drawFile(files[currentIndex])
 	}
 	
 	func drawQuickLookPreview(with path: String) {
@@ -216,7 +238,7 @@ class ViewController: NSViewController {
 			fileSequenceStackView.isHidden = false
 			fileInfoStackView.isHidden = false
 			files = panel.urls
-			drawFile(files[Int(currentIndex)])
+			drawFile(files[currentIndex])
 		}
 	}
 	
@@ -229,19 +251,20 @@ class ViewController: NSViewController {
 				drawFolder()
 			} else {
 				switch file.pathExtension {
-				case Strings.UNDERCOOKED_FILE_EXTENSION:
+				case Strings.UNDERCOOKED_FILE_EXTENSION:  // Undercooked file
 					currentFileType = .undercooked
 					fileInfoStatusLabel.stringValue = Strings.UNDERCOOKED
 					fileInfoStatusLabel.textColor = NSColor.systemYellow
 					fileInfoCookButton.stringValue = Strings.UNCOOK
 					let decooked = file.deletingPathExtension()
 					drawQuickLookPreview(with: decooked.path)
-				case Strings.DEEPFRIED_FILE_EXTENSION:
+				case Strings.DEEPFRIED_FILE_EXTENSION:    // Deep-fried file
 					currentFileType = .deepfried
 					fileInfoStatusLabel.stringValue = Strings.DEEPFRIED
 					fileInfoStatusLabel.textColor = NSColor.systemGreen
 					fileInfoCookButton.stringValue = Strings.UNCOOK
-				default:
+					drawImage(with: Kitchen.cookedData(from: file, with: fileManager))
+				default:                                  // Raw file
 					currentFileType = .raw
 					fileInfoStatusLabel.stringValue = Strings.RAW
 					fileInfoStatusLabel.textColor = NSColor.secondaryLabelColor
