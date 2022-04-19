@@ -43,21 +43,42 @@ class ViewController: NSViewController {
 	@IBOutlet weak var fileInfoStackView: NSStackView!
 	@IBOutlet weak var fileInfoNameLabel: NSTextField!
 	@IBOutlet weak var fileInfoStatusLabel: NSTextField!
+	@IBOutlet weak var fileInfoCookButton: NSButton!
+	@IBAction func fileInfoCookButtonPressed(_ sender: Any) {
+		if batchCookEnabled {
+			
+		} else {
+			resetContentView()
+			cookingMessageStackView.isHidden = false
+			cookingMessageProgressIndicator.startAnimation(nil)
+		}
+	}
 	@IBOutlet weak var contentView: NSView!
 	@IBOutlet weak var onboardingMessageStackView: NSStackView!
 	@IBOutlet weak var folderMessageStackView: NSStackView!
 	@IBAction func folderMessageDiveButtonPressed(_ sender: Any) {
 	}
+	@IBOutlet weak var cookingMessageStackView: NSStackView!
+	@IBOutlet weak var cookingMessageProgressIndicator: NSProgressIndicator!
 	@IBOutlet weak var kittenImageView: NSImageView!
 	
 	//*********************************************************************
-	// MARK: VARIABLES & CONSTS
+	// MARK: VARIABLES, CONSTS & ENUMS
 	//*********************************************************************
 	var videoPlayer: AVPlayer = AVPlayer()
 	var kittenMode: Bool = false
 	var files: [URL] = []
 	var currentIndex: Int64 = 0
+	var currentFileType = FileType.unknown
+	var batchCookEnabled = false
 	let fileManager = FileManager.default
+	
+	enum FileType {
+		case raw
+		case undercooked
+		case deepfried
+		case unknown
+	}
 	
 	//*********************************************************************
 	// MARK: MAIN FUNCTIONS
@@ -66,6 +87,10 @@ class ViewController: NSViewController {
         super.viewDidLoad()
 		NSEvent.addLocalMonitorForEvents(matching: .keyDown) {
 			self.myKeyDown(with: $0)
+			return nil
+		}
+		NSEvent.addLocalMonitorForEvents(matching: .flagsChanged) {
+			self.myFlagsChanged(with: $0)
 			return nil
 		}
     }
@@ -77,27 +102,41 @@ class ViewController: NSViewController {
     }
 	
 	func myKeyDown(with event: NSEvent) {
-			super.keyDown(with: event)
-			switch event.keyCode {
-			case 12:  // Q
-				exit(0)
-			case 49:  // Space
-				toggleKittenMode()
-//			case 1:
-//				stopEject()
-//			case 36:
-//				handleSet()
-//			case 123:
-//				move(false)
-//			case 124:
-//				move(true)
-//			case 125:
-//				changeFolder(false)
-//			case 126:
-//				changeFolder(true)
-			default: ()
+		super.keyDown(with: event)
+		switch event.keyCode {
+		case 12:  // Q
+			exit(0)
+		case 49:  // Space
+			toggleKittenMode()
+		default:
+			#if DEBUG
+			print("key down: \(event.keyCode)")
+			#else
+			()
+			#endif
+		}
+	}
+	
+	func myFlagsChanged(with event: NSEvent) {
+		super.flagsChanged(with: event)
+		guard currentFileType != .unknown else {
+			return
+		}
+		if event.keyCode == 58 {  // Option
+			switch event.modifierFlags.rawValue {
+			case 0x100, 0:  // None (release)
+				batchCookEnabled = false
+				if currentFileType == .raw {
+					fileInfoCookButton.title = Strings.COOK
+				} else {
+					fileInfoCookButton.title = Strings.UNCOOK
+				}
+			default:  // Pressed
+				batchCookEnabled = true
+				fileInfoCookButton.title = Strings.BATCH_COOK
 			}
 		}
+	}
 	
 	func toggleKittenMode() {
 		switch kittenMode {
@@ -114,13 +153,14 @@ class ViewController: NSViewController {
 	
 	func resetContentView() {
 		folderMessageStackView.isHidden = true
-		// FIXME:
-		// Dumbass approach
-		for i in contentView.subviews[2..<contentView.subviews.count] {
+		cookingMessageStackView.isHidden = true
+		// FIXME
+		#warning("Dumbass approach")
+		for i in contentView.subviews[3..<contentView.subviews.count] {
 			i.removeFromSuperview()
 		}
 		if let sublayers = contentView.layer!.sublayers {
-			for i in sublayers[2..<sublayers.count] {
+			for i in sublayers[3..<sublayers.count] {
 				i.removeFromSuperlayer()
 			}
 		}
@@ -190,17 +230,24 @@ class ViewController: NSViewController {
 			} else {
 				switch file.pathExtension {
 				case Strings.UNDERCOOKED_FILE_EXTENSION:
+					currentFileType = .undercooked
 					fileInfoStatusLabel.stringValue = Strings.UNDERCOOKED
 					fileInfoStatusLabel.textColor = NSColor.systemYellow
+					fileInfoCookButton.stringValue = Strings.UNCOOK
+					let decooked = file.deletingPathExtension()
+					drawQuickLookPreview(with: decooked.path)
 				case Strings.DEEPFRIED_FILE_EXTENSION:
+					currentFileType = .deepfried
 					fileInfoStatusLabel.stringValue = Strings.DEEPFRIED
 					fileInfoStatusLabel.textColor = NSColor.systemGreen
+					fileInfoCookButton.stringValue = Strings.UNCOOK
 				default:
+					currentFileType = .raw
 					fileInfoStatusLabel.stringValue = Strings.RAW
 					fileInfoStatusLabel.textColor = NSColor.secondaryLabelColor
+					fileInfoCookButton.stringValue = Strings.COOK
+					drawQuickLookPreview(with: file.path)
 				}
-				let decooked = file.deletingPathExtension()
-				print(decooked.pathExtension)
 			}
 		} else {
 			fatalError(Strings.FATAL_NOFILE)

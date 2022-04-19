@@ -13,5 +13,8 @@ public struct Strings {
 	static let UNDERCOOKED = "Undercooked"
 	static let DEEPFRIED = "Deep-fried"
 	static let RAW = "Raw"
+	static let COOK = "Cook"
+	static let BATCH_COOK = "Cook all"
+	static let UNCOOK = "Uncook"
 	static let FATAL_NOFILE = "File does not exist"
 }

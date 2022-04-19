@@ -16,26 +16,27 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Cabbage" systemMenu="apple" id="uQy-DD-JDr">
                                     <items>
-                                        <menuItem title="About Cabbage" id="5kV-Vb-QxS">
+                                        <menuItem title="About Cabbage" enabled="NO" id="5kV-Vb-QxS">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="orderFrontStandardAboutPanel:" target="Ady-hI-5gd" id="Exp-CZ-Vem"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Created by Lester Covey" hidden="YES" id="Scr-Sk-5oJ">
+                                        <menuItem title="Created by Lester Covey" enabled="NO" id="Scr-Sk-5oJ">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                         </menuItem>
-                                        <menuItem title="Moscow, 2022" hidden="YES" id="O1s-mN-JCR">
+                                        <menuItem title="Moscow, 2022" enabled="NO" id="O1s-mN-JCR">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="4je-JR-u6R"/>
-                                        <menuItem title="Hide Cabbage" keyEquivalent="h" id="Olw-nP-bQN">
+                                        <menuItem title="Hide Cabbage" id="Olw-nP-bQN">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="hide:" target="Ady-hI-5gd" id="PnN-Uc-m68"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Hide Others" keyEquivalent="h" id="Vdr-fp-XzO">
-                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                        <menuItem title="Hide Others" id="Vdr-fp-XzO">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="hideOtherApplications:" target="Ady-hI-5gd" id="VT4-aY-XCT"/>
                                             </connections>
@@ -56,9 +57,9 @@
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem title="Helр" id="wpr-3q-Mcd">
+                            <menuItem title="Helр" id="uxL-jM-Pr0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Helр" systemMenu="help" id="F2S-fz-NVQ">
+                                <menu key="submenu" title="Helр" id="APo-oA-zjg">
                                     <items>
                                         <menuItem title="Visit GitHub" id="FKE-Sm-Kum">
                                             <modifierMask key="keyEquivalentModifierMask"/>
@@ -90,8 +91,8 @@
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="24" y="24" width="480" height="270"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
-                        <value key="minSize" type="size" width="480" height="480"/>
-                        <value key="minFullScreenContentSize" type="size" width="480" height="480"/>
+                        <value key="minSize" type="size" width="480" height="270"/>
+                        <value key="minFullScreenContentSize" type="size" width="480" height="270"/>
                         <connections>
                             <outlet property="delegate" destination="B8D-0N-5wS" id="98r-iN-zZc"/>
                         </connections>
@@ -112,11 +113,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="862" height="454"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <stackView distribution="equalCentering" orientation="horizontal" alignment="centerY" spacing="152" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" translatesAutoresizingMaskIntoConstraints="NO" id="7Q7-bo-x9J">
+                            <stackView distribution="equalCentering" orientation="horizontal" alignment="centerY" spacing="52" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" translatesAutoresizingMaskIntoConstraints="NO" id="7Q7-bo-x9J">
                                 <rect key="frame" x="20" y="14" width="822" height="36"/>
                                 <subviews>
                                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Jy9-rE-fER">
-                                        <rect key="frame" x="-6" y="0.0" width="212" height="32"/>
+                                        <rect key="frame" x="305" y="0.0" width="212" height="32"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="200" id="1hI-MV-L63"/>
                                         </constraints>
@@ -145,7 +146,7 @@
                                                 </connections>
                                             </button>
                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="vbo-Al-UoP">
-                                                <rect key="frame" x="48" y="3" width="22" height="16"/>
+                                                <rect key="frame" x="48" y="2" width="22" height="16"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="18" id="bzv-9O-3C9"/>
                                                 </constraints>
@@ -184,10 +185,10 @@
                                         </customSpacing>
                                     </stackView>
                                     <stackView hidden="YES" distribution="fill" orientation="vertical" alignment="trailing" spacing="4" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" horizontalClippingResistancePriority="250" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XLx-3g-qfZ">
-                                        <rect key="frame" x="622" y="0.0" width="200" height="36"/>
+                                        <rect key="frame" x="622" y="1" width="200" height="34"/>
                                         <subviews>
                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="RX6-Rm-24M">
-                                                <rect key="frame" x="-2" y="20" width="204" height="16"/>
+                                                <rect key="frame" x="-2" y="18" width="204" height="16"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="16" id="XPD-Zr-Soy"/>
                                                 </constraints>
@@ -197,28 +198,51 @@
                                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                 </textFieldCell>
                                             </textField>
-                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="HcD-Ik-UNb">
-                                                <rect key="frame" x="-2" y="0.0" width="204" height="16"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="16" id="o4Z-eC-sJK"/>
-                                                </constraints>
-                                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="Unknown" id="ppJ-wl-BLZ">
-                                                    <font key="font" metaFont="smallSystem"/>
-                                                    <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
-                                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                </textFieldCell>
-                                            </textField>
+                                            <stackView distribution="fill" orientation="horizontal" alignment="bottom" spacing="4" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="val-qE-e1z">
+                                                <rect key="frame" x="0.0" y="0.0" width="200" height="14"/>
+                                                <subviews>
+                                                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="HcD-Ik-UNb">
+                                                        <rect key="frame" x="-2" y="0.0" width="164" height="14"/>
+                                                        <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="Unknown" id="ppJ-wl-BLZ">
+                                                            <font key="font" metaFont="smallSystem"/>
+                                                            <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                    </textField>
+                                                    <button horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="hDr-Jb-wZ8">
+                                                        <rect key="frame" x="164" y="-1" width="36" height="14"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" relation="lessThanOrEqual" constant="50" id="gpc-fa-OYl"/>
+                                                        </constraints>
+                                                        <buttonCell key="cell" type="inline" title="Cook" bezelStyle="inline" alignment="center" scrollable="YES" lineBreakMode="clipping" borderStyle="border" inset="2" id="Hj4-xF-Qlc">
+                                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                            <font key="font" metaFont="miniSystemBold"/>
+                                                        </buttonCell>
+                                                        <connections>
+                                                            <action selector="fileInfoCookButtonPressed:" target="XfG-lQ-9wD" id="HjH-nc-EMT"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                                <visibilityPriorities>
+                                                    <integer value="1000"/>
+                                                    <integer value="1000"/>
+                                                </visibilityPriorities>
+                                                <customSpacing>
+                                                    <real value="3.4028234663852886e+38"/>
+                                                    <real value="3.4028234663852886e+38"/>
+                                                </customSpacing>
+                                            </stackView>
                                         </subviews>
                                         <constraints>
-                                            <constraint firstAttribute="trailing" secondItem="HcD-Ik-UNb" secondAttribute="trailing" id="12C-9g-LNs"/>
+                                            <constraint firstItem="val-qE-e1z" firstAttribute="leading" secondItem="XLx-3g-qfZ" secondAttribute="leading" id="G0n-b6-hXK"/>
                                             <constraint firstAttribute="width" constant="200" id="MJ7-PK-6Dp"/>
                                             <constraint firstAttribute="trailing" secondItem="RX6-Rm-24M" secondAttribute="trailing" id="UXz-Nm-3af"/>
-                                            <constraint firstItem="HcD-Ik-UNb" firstAttribute="leading" secondItem="XLx-3g-qfZ" secondAttribute="leading" id="ZpB-zS-SPC"/>
+                                            <constraint firstAttribute="trailing" secondItem="val-qE-e1z" secondAttribute="trailing" id="oVP-Hn-opk"/>
                                             <constraint firstItem="RX6-Rm-24M" firstAttribute="leading" secondItem="XLx-3g-qfZ" secondAttribute="leading" id="wZv-y4-2rr"/>
                                         </constraints>
                                         <visibilityPriorities>
-                                            <real value="1000"/>
-                                            <real value="1000"/>
+                                            <integer value="1000"/>
+                                            <integer value="1000"/>
                                         </visibilityPriorities>
                                         <customSpacing>
                                             <real value="3.4028234663852886e+38"/>
@@ -229,7 +253,7 @@
                                 <visibilityPriorities>
                                     <integer value="1000"/>
                                     <integer value="1000"/>
-                                    <real value="1000"/>
+                                    <integer value="1000"/>
                                 </visibilityPriorities>
                                 <customSpacing>
                                     <real value="3.4028234663852886e+38"/>
@@ -344,11 +368,54 @@
                                             <real value="3.4028234663852886e+38"/>
                                         </customSpacing>
                                     </stackView>
+                                    <stackView hidden="YES" distribution="fill" orientation="vertical" alignment="centerX" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iYz-a9-d2g">
+                                        <rect key="frame" x="299" y="129" width="225" height="112"/>
+                                        <subviews>
+                                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="bF4-Nd-EO8">
+                                                <rect key="frame" x="86" y="60" width="52" height="52"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="52" id="Np4-OD-GaR"/>
+                                                    <constraint firstAttribute="height" constant="52" id="WSr-Bz-as8"/>
+                                                </constraints>
+                                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="Pot" id="dGf-WL-v2Y"/>
+                                            </imageView>
+                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="qP2-aw-0ry">
+                                                <rect key="frame" x="-2" y="26" width="229" height="26"/>
+                                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="Cooking..." id="4b7-iR-eNF">
+                                                    <font key="font" metaFont="system" size="22"/>
+                                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                            </textField>
+                                            <progressIndicator wantsLayer="YES" maxValue="100" indeterminate="YES" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="H5F-CP-hi3">
+                                                <rect key="frame" x="0.0" y="-1" width="225" height="20"/>
+                                            </progressIndicator>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="225" id="5fq-Pj-TZC"/>
+                                            <constraint firstAttribute="trailing" secondItem="H5F-CP-hi3" secondAttribute="trailing" id="7SE-aJ-Hf6"/>
+                                            <constraint firstItem="H5F-CP-hi3" firstAttribute="leading" secondItem="iYz-a9-d2g" secondAttribute="leading" id="Elt-bO-glh"/>
+                                            <constraint firstAttribute="trailing" secondItem="qP2-aw-0ry" secondAttribute="trailing" id="bfT-ju-mch"/>
+                                            <constraint firstItem="qP2-aw-0ry" firstAttribute="leading" secondItem="iYz-a9-d2g" secondAttribute="leading" id="kL2-2K-Fax"/>
+                                        </constraints>
+                                        <visibilityPriorities>
+                                            <integer value="1000"/>
+                                            <integer value="1000"/>
+                                            <integer value="1000"/>
+                                        </visibilityPriorities>
+                                        <customSpacing>
+                                            <real value="3.4028234663852886e+38"/>
+                                            <real value="3.4028234663852886e+38"/>
+                                            <real value="3.4028234663852886e+38"/>
+                                        </customSpacing>
+                                    </stackView>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="Xr5-mG-pul" firstAttribute="centerX" secondItem="Ra0-qn-K3k" secondAttribute="centerX" id="JmD-6p-O6x"/>
+                                    <constraint firstItem="iYz-a9-d2g" firstAttribute="centerX" secondItem="Ra0-qn-K3k" secondAttribute="centerX" id="VXC-nu-VjG"/>
                                     <constraint firstItem="a1Q-Bj-QD9" firstAttribute="centerY" secondItem="Ra0-qn-K3k" secondAttribute="centerY" id="WuQ-cO-nlL"/>
                                     <constraint firstItem="a1Q-Bj-QD9" firstAttribute="centerX" secondItem="Ra0-qn-K3k" secondAttribute="centerX" id="bX0-J6-fyu"/>
+                                    <constraint firstItem="iYz-a9-d2g" firstAttribute="centerY" secondItem="Ra0-qn-K3k" secondAttribute="centerY" id="cVw-GI-Erl"/>
                                     <constraint firstItem="Xr5-mG-pul" firstAttribute="centerY" secondItem="Ra0-qn-K3k" secondAttribute="centerY" id="j36-TU-L0d"/>
                                 </constraints>
                             </customView>
@@ -375,6 +442,9 @@
                     <connections>
                         <outlet property="chooseFilesButton" destination="Jy9-rE-fER" id="XKZ-VC-svH"/>
                         <outlet property="contentView" destination="Ra0-qn-K3k" id="FpM-DX-WiE"/>
+                        <outlet property="cookingMessageProgressIndicator" destination="H5F-CP-hi3" id="CRj-iU-HU5"/>
+                        <outlet property="cookingMessageStackView" destination="iYz-a9-d2g" id="z9q-N0-oay"/>
+                        <outlet property="fileInfoCookButton" destination="hDr-Jb-wZ8" id="x5I-Ss-AZv"/>
                         <outlet property="fileInfoNameLabel" destination="RX6-Rm-24M" id="4Jq-qo-l8A"/>
                         <outlet property="fileInfoStackView" destination="XLx-3g-qfZ" id="Hv5-nA-bbu"/>
                         <outlet property="fileInfoStatusLabel" destination="HcD-Ik-UNb" id="z9b-vS-Fd6"/>
@@ -398,5 +468,6 @@
         <image name="Leafy green" width="120" height="120"/>
         <image name="NSGoBackTemplate" width="9" height="12"/>
         <image name="NSGoForwardTemplate" width="9" height="12"/>
+        <image name="Pot" width="120" height="120"/>
     </resources>
 </document>
