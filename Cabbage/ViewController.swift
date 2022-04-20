@@ -36,7 +36,6 @@ class ViewController: NSViewController {
 	@IBAction func chooseFilesButtonPressed(_ sender: Any) {
 		askForFiles()
 	}
-	@IBOutlet weak var fileSequenceStackView: NSStackView!
 	@IBOutlet weak var fileSequenceBackButton: NSButton!
 	@IBAction func fileSequenceBackButtonPressed(_ sender: Any) {
 	}
@@ -44,7 +43,6 @@ class ViewController: NSViewController {
 	@IBOutlet weak var fileSequenceForwardButton: NSButton!
 	@IBAction func fileSequenceForwardButtonPressed(_ sender: Any) {
 	}
-	@IBOutlet weak var fileInfoStackView: NSStackView!
 	@IBOutlet weak var fileInfoNameLabel: NSTextField!
 	@IBOutlet weak var fileInfoStatusLabel: NSTextField!
 	@IBOutlet weak var fileInfoCookButton: NSButton!
@@ -52,12 +50,15 @@ class ViewController: NSViewController {
 		tryCook()
 	}
 	@IBOutlet weak var contentView: NSView!
+	@IBOutlet weak var controlsView: NSView!
 	@IBOutlet weak var onboardingMessageStackView: NSStackView!
 	@IBOutlet weak var folderMessageStackView: NSStackView!
 	@IBAction func folderMessageDiveButtonPressed(_ sender: Any) {
 	}
 	@IBOutlet weak var cookingMessageStackView: NSStackView!
 	@IBOutlet weak var cookingMessageProgressIndicator: NSProgressIndicator!
+	@IBOutlet weak var catastopheMessageStackView: NSStackView!
+	@IBOutlet weak var catastropheMessageDescriptionLabel: NSTextField!
 	@IBOutlet weak var kittenImageView: NSImageView!
 	
 	//*********************************************************************
@@ -68,13 +69,17 @@ class ViewController: NSViewController {
 	var files: [URL] = []
 	var currentIndex: Int = 0
 	var currentFileType = FileType.unknown
-	var batchCookEnabled = false
+	var currentFileSequenceType = SequenceType.unknown
+	var alternateClickAction = false
 	let fileManager = FileManager.default
 	
 	enum FileType {
 		case raw
-		case undercooked
 		case deepfried
+		case unknown
+	}
+	enum SequenceType {
+		case cooked
 		case unknown
 	}
 	
@@ -110,7 +115,7 @@ class ViewController: NSViewController {
 			#if DEBUG
 			print("key down: \(event.keyCode)")
 			#else
-			()
+			break
 			#endif
 		}
 	}
@@ -123,15 +128,19 @@ class ViewController: NSViewController {
 		if event.keyCode == 58 {  // Option
 			switch event.modifierFlags.rawValue {
 			case 0x100, 0:  // None (release)
-				batchCookEnabled = false
+				alternateClickAction = false
 				if currentFileType == .raw {
 					fileInfoCookButton.title = Strings.COOK
 				} else {
 					fileInfoCookButton.title = Strings.UNCOOK
 				}
 			default:  // Pressed
-				batchCookEnabled = true
-				fileInfoCookButton.title = Strings.BATCH_COOK
+				alternateClickAction = true
+				if currentFileSequenceType == .unknown {
+					fileInfoCookButton.title = Strings.BATCH_COOK
+				} else {
+					fileInfoCookButton.title = Strings.BATCH_UNCOOK
+				}
 			}
 		}
 	}
@@ -150,14 +159,15 @@ class ViewController: NSViewController {
 	}
 	
 	func resetContentView() {
-		folderMessageStackView.isHidden = true
-		cookingMessageStackView.isHidden = true
-		#warning("Dumbass approach")
-		for i in contentView.subviews[3..<contentView.subviews.count] {
+		#warning("Probably dumbass approach")
+		for i in contentView.subviews[0..<4] {
+			i.isHidden = true
+		}
+		for i in contentView.subviews[4..<contentView.subviews.count] {
 			i.removeFromSuperview()
 		}
 		if let sublayers = contentView.layer!.sublayers {
-			for i in sublayers[3..<sublayers.count] {
+			for i in sublayers[4..<sublayers.count] {
 				i.removeFromSuperlayer()
 			}
 		}
@@ -174,7 +184,7 @@ class ViewController: NSViewController {
 			return
 		}
 		showCookingMessage()
-		if batchCookEnabled {
+		if alternateClickAction {
 			for i in files {
 				do {
 					files[currentIndex] = try Kitchen.cook(i, with: fileManager)
@@ -245,6 +255,11 @@ class ViewController: NSViewController {
 		folderMessageStackView.isHidden = false
 	}
 	
+	func drawCatastrophe(_ message: String) {
+		catastropheMessageDescriptionLabel.stringValue = message
+		folderMessageStackView.isHidden = false
+	}
+	
 	func placeView(_ view: NSView) {
 		view.frame = NSRect(x: 0, y: 0, width: contentView.frame.width, height: contentView.frame.height)
 		view.autoresizingMask = [.height, .width]
@@ -260,15 +275,26 @@ class ViewController: NSViewController {
 				return
 			}
 			onboardingMessageStackView.isHidden = true
-			fileSequenceStackView.isHidden = false
-			fileInfoStackView.isHidden = false
+			controlsView.isHidden = false
 			files = panel.urls
+			analyzeFileSequence()
 			drawFile(files[currentIndex])
 		}
 	}
 	
+	func analyzeFileSequence() {
+		for i in files {
+			if i.pathExtension != Strings.DEEPFRIED {
+				currentFileSequenceType = .unknown
+				return
+			}
+		}
+		currentFileSequenceType = .cooked
+	}
+	
 	func drawFile(_ file: URL) {
 		resetContentView()
+		clearTempFolder()
 		var isDir : ObjCBool = false
 		if fileManager.fileExists(atPath: file.path, isDirectory:&isDir) {
 			fileInfoNameLabel.stringValue = file.lastPathComponent
@@ -276,22 +302,30 @@ class ViewController: NSViewController {
 				drawFolder()
 			} else {
 				switch file.pathExtension {
-				case Strings.UNDERCOOKED_FILE_EXTENSION:  // Undercooked file
-					currentFileType = .undercooked
-					fileInfoStatusLabel.stringValue = Strings.UNDERCOOKED
-					fileInfoStatusLabel.textColor = NSColor.systemYellow
-					fileInfoCookButton.title = Strings.UNCOOK
-					let decooked = file.deletingPathExtension()
-					drawQuickLookPreview(with: decooked.path)
 				case Strings.DEEPFRIED_FILE_EXTENSION:    // Deep-fried file
 					currentFileType = .deepfried
 					fileInfoStatusLabel.stringValue = Strings.DEEPFRIED
 					fileInfoStatusLabel.textColor = NSColor.systemGreen
 					fileInfoCookButton.title = Strings.UNCOOK
+					let realFile = file.deletingPathExtension()
+					if Strings.KNOWN_IMAGE_FILE_EXTENSIONS.contains(realFile.pathExtension) {
+						do {
+							try drawImage(with: Kitchen.cookedData(from: file, with: fileManager))
+						} catch let err {
+							drawCatastrophe(err.localizedDescription)
+						}
+					} else {
+						do {
+							let data = try Kitchen.cookedData(from: file, with: fileManager)
+						} catch let err {
+							drawCatastrophe(err.localizedDescription)
+						}
+						// Save `data` to temp location and open via quick look
+					}
 					do {
 					try drawImage(with: Kitchen.cookedData(from: file, with: fileManager))
 					} catch let err {
-						displayAlert(title: Strings.RECOVERABLE_COOKINGDATACATASTROPHE, message: err.localizedDescription, buttons: Strings.FINE)
+						drawCatastrophe(err.localizedDescription)
 					}
 				default:                                  // Raw file
 					currentFileType = .raw
