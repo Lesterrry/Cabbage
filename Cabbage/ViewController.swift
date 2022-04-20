@@ -11,20 +11,21 @@ import Quartz
 import AVFoundation
 
 class MainView: NSView {
-	
+
 	override func performKeyEquivalent(with event: NSEvent) -> Bool {
 		return true
 	}
-	override var acceptsFirstResponder : Bool {
+
+	override var acceptsFirstResponder: Bool {
 		return true
 	}
-	
+
 }
 
 class MyQuickLookItem: NSObject, QLPreviewItem {
-	
+
 	var previewItemURL: URL!
-	
+
 }
 
 class ViewController: NSViewController {
@@ -214,15 +215,17 @@ class ViewController: NSViewController {
 	static func clearTempFolder() {
 		let tempFolder = NSTemporaryDirectory()
 		let fileManager = FileManager.default
-		let toClear = try! fileManager.contentsOfDirectory(atPath: tempFolder)
+		guard let toClear = try? fileManager.contentsOfDirectory(atPath: tempFolder) else {
+			return
+		}
 		for i in toClear {
 			let file = tempFolder.appending("/\(i)")
 			var isDir: ObjCBool = false
-			if fileManager.fileExists(atPath: file, isDirectory:&isDir) {
+			if fileManager.fileExists(atPath: file, isDirectory: &isDir) {
 				if isDir.boolValue {
 					continue
 				}
-				try! fileManager.removeItem(atPath: file)
+				try? fileManager.removeItem(atPath: file)
 			} else {
 				fatalError(Strings.FATAL_NOTEMPDIR)
 			}
@@ -270,11 +273,9 @@ class ViewController: NSViewController {
 	}
 	
 	func analyzeFileSequence() {
-		for i in files {
-			if i.pathExtension != Strings.DEEPFRIED_FILE_EXTENSION {
-				currentFileSequenceType = .unknown
-				return
-			}
+		for i in files where i.pathExtension != Strings.DEEPFRIED_FILE_EXTENSION {
+			currentFileSequenceType = .unknown
+			return
 		}
 		currentFileSequenceType = .cooked
 	}
@@ -282,7 +283,7 @@ class ViewController: NSViewController {
 	func dive() throws {
 		let folder = files[currentIndex]
 		var isDir: ObjCBool = false
-		guard fileManager.fileExists(atPath: folder.path, isDirectory:&isDir), isDir.boolValue else {
+		guard fileManager.fileExists(atPath: folder.path, isDirectory: &isDir), isDir.boolValue else {
 			fatalError(Strings.FATAL_NOTFOLDER)
 		}
 		if predivingFiles == nil {
@@ -332,7 +333,7 @@ class ViewController: NSViewController {
 		let alert = NSAlert()
 		alert.messageText = title
 		alert.informativeText = message
-		for button in buttons{
+		for button in buttons {
 			alert.addButton(withTitle: button)
 		}
 		return alert.runModal().rawValue
@@ -436,9 +437,16 @@ class ViewController: NSViewController {
 				}
 			} else {
 				do {
-					self.files[self.currentIndex] = try Kitchen.workCulinaryMiracle(with: self.files[self.currentIndex], using: self.fileManager)
+					self.files[self.currentIndex] = try Kitchen.workCulinaryMiracle(
+						with: self.files[self.currentIndex],
+						using: self.fileManager
+					)
 				} catch let err {
-					self.displayAlert(title: Strings.RECOVERABLE_COOKINGCATASTROPHE, message: err.localizedDescription, buttons: Strings.FINE)
+					self.displayAlert(
+						title: Strings.RECOVERABLE_COOKINGCATASTROPHE,
+						message: err.localizedDescription,
+						buttons: Strings.FINE
+					)
 				}
 			}
 			self.drawFile(self.files[self.currentIndex])
@@ -451,7 +459,7 @@ class ViewController: NSViewController {
 		resetContentView()
 		ViewController.clearTempFolder()
 		var isDir: ObjCBool = false
-		if fileManager.fileExists(atPath: file.path, isDirectory:&isDir) {
+		if fileManager.fileExists(atPath: file.path, isDirectory: &isDir) {
 			fileInfoNameLabel.stringValue = file.lastPathComponent
 			if isDir.boolValue {
 				fileInfoCookButton.isEnabled = false
@@ -478,7 +486,9 @@ class ViewController: NSViewController {
 					} else {
 						do {
 							let attr = try fileManager.attributesOfItem(atPath: file.path)
-							if attr[FileAttributeKey.size] as! UInt64 > 20971520 && !force {
+							if let size = attr[FileAttributeKey.size] as? UInt64,
+							   size > 20971520,
+							   !force {
 								drawDangerous()
 								return
 							}
@@ -516,4 +526,3 @@ class ViewController: NSViewController {
 	}
 
 }
-

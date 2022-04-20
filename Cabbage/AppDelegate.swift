@@ -15,11 +15,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationWillTerminate(_ aNotification: Notification) {
 		ViewController.clearTempFolder()
 	}
-	
+
 	func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
 		true
 	}
-	
+
 	@IBAction func visitGithubMenuItemPressed(_ sender: Any) {
 		NSWorkspace.shared.open(URL(string: "https://github.com/Lesterrry/Cabbage")!)
 	}

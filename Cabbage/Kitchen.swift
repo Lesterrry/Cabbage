@@ -8,7 +8,7 @@
 import Foundation
 
 struct Kitchen {
-	
+
 	private enum Operation {
 		case cook
 		case uncook
@@ -46,7 +46,11 @@ struct Kitchen {
 	}
 	
 	@discardableResult
-	private static func perform(_ operation: Operation, file: URL, using fileManager: FileManager) throws -> (Data?, URL?) {
+	private static func perform(
+		_ operation: Operation,
+		file: URL,
+		using fileManager: FileManager
+	) throws -> (Data?, URL?) {
 		guard var data = fileManager.contents(atPath: file.path) else {
 			throw NSError()
 		}
@@ -75,7 +79,9 @@ struct Kitchen {
 		if operation == .return {
 			return (data, nil)
 		}
-		let newFile = operation == .cook ? file.appendingPathExtension(Strings.DEEPFRIED_FILE_EXTENSION) : file.deletingPathExtension()
+		let newFile = operation == .cook ?
+			file.appendingPathExtension(Strings.DEEPFRIED_FILE_EXTENSION) :
+			file.deletingPathExtension()
 		try data.write(to: file)
 		try fileManager.moveItem(at: file, to: newFile)
 		return (nil, newFile)
