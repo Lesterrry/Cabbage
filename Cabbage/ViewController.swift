@@ -55,7 +55,7 @@ class ViewController: NSViewController {
 	}
 	@IBOutlet weak var fileSequenceUndiveButton: NSButton!
 	@IBAction func fileSequenceUndiveButtonPressed(_ sender: Any) {
-		//undive()
+		try? undive()
 	}
 	@IBOutlet weak var fileInfoNameLabel: NSTextField!
 	@IBOutlet weak var fileInfoStatusLabel: NSTextField!
@@ -68,7 +68,7 @@ class ViewController: NSViewController {
 	@IBOutlet weak var onboardingMessageStackView: NSStackView!
 	@IBOutlet weak var folderMessageStackView: NSStackView!
 	@IBAction func folderMessageDiveButtonPressed(_ sender: Any) {
-		dive()
+		try? dive()
 	}
 	@IBOutlet weak var cookingMessageStackView: NSStackView!
 	@IBOutlet weak var cookingMessageProgressIndicator: NSProgressIndicator!
@@ -83,15 +83,15 @@ class ViewController: NSViewController {
 	//*********************************************************************
 	// MARK: VARIABLES, CONSTS & ENUMS
 	//*********************************************************************
-	var videoPlayer: AVPlayer = AVPlayer()
 	var kittenMode: Bool = false
 	var files: [URL] = []
 	var currentIndex: Int = 0
 	var currentFileType = FileType.unknown
 	var currentFileSequenceType = SequenceType.unknown
 	var alternateClickAction = false
-	var divingHistory: [URL] = []
-	var predivingFiles: [URL]? = nil
+	lazy var videoPlayer: AVPlayer = AVPlayer()
+	lazy var divingHistory: [URL] = []
+	lazy var predivingFiles: [URL]? = nil
 	let fileManager = FileManager.default
 	let tempFolder = NSTemporaryDirectory()
 	
@@ -142,6 +142,14 @@ class ViewController: NSViewController {
 			NSApp.terminate(self)
 		case 49:  // Space
 			toggleKittenMode()
+		case 124:  // Right
+			moveSequence(.forward)
+		case 123:  // Left
+			moveSequence(.backward)
+		case 36:  // Return
+			tryCook()
+		case 8:  // `C`
+			askForFiles()
 		default:
 			#if DEBUG
 			print("key down: \(event.keyCode)")
@@ -271,7 +279,7 @@ class ViewController: NSViewController {
 		currentFileSequenceType = .cooked
 	}
 	
-	func dive() {
+	func dive() throws {
 		let folder = files[currentIndex]
 		var isDir: ObjCBool = false
 		guard fileManager.fileExists(atPath: folder.path, isDirectory:&isDir), isDir.boolValue else {
@@ -282,20 +290,37 @@ class ViewController: NSViewController {
 		}
 		divingHistory.append(folder)
 		currentIndex = 0
-		do {
-			let newFiles = try fileManager.contentsOfDirectory(atPath: folder.path)
-			guard newFiles.count > 0 else {
-				return
-			}
-			files = []
-			for f in newFiles {
-				files.append(folder.appendingPathComponent(f))
-			}
-			fileSequenceUndiveButton.isHidden = false
-			setFileSequenceIndexLabel()
-			drawFile(files[0])
-		} catch {
+		try fillFiles(with: folder)
+		fileSequenceUndiveButton.isHidden = false
+		setFileSequenceIndexLabel()
+		drawFile(files[0])
+	}
+	
+	func undive() throws {
+		guard let pref = predivingFiles else {
 			return
+		}
+		if divingHistory.count == 1 {
+			divingHistory = []
+			predivingFiles = nil
+			files = pref
+			fileSequenceUndiveButton.isHidden = true
+		} else {
+			try fillFiles(with: divingHistory[divingHistory.count - 2])
+			divingHistory.removeLast(1)
+		}
+		setFileSequenceIndexLabel()
+		drawFile(files[0])
+	}
+	
+	func fillFiles(with folder: URL) throws {
+		let newFiles = try fileManager.contentsOfDirectory(atPath: folder.path)
+		guard newFiles.count > 0 else {
+			return
+		}
+		files = []
+		for f in newFiles {
+			files.append(folder.appendingPathComponent(f))
 		}
 	}
 	
@@ -338,19 +363,19 @@ class ViewController: NSViewController {
 		placeView(quickLookView)
 	}
 	
-	#warning("Unused")
-	func drawVideoPlayer(with path: String) {
-		let url = URL(fileURLWithPath: path)
-		let asset = AVAsset(url: url)
-		let playerItem = AVPlayerItem(asset: asset)
-		videoPlayer = AVPlayer(playerItem: playerItem)
-		let playerLayer = AVPlayerLayer(player: videoPlayer)
-		playerLayer.frame = NSRect(x: 0, y: 0, width: contentView.frame.width, height: contentView.frame.height)
-		playerLayer.autoresizingMask = [.layerHeightSizable, .layerWidthSizable]
-		playerLayer.videoGravity = .resizeAspect
-		contentView.layer!.addSublayer(playerLayer)
-		videoPlayer.play()
-	}
+//	#warning("Unused")
+//	func drawVideoPlayer(with path: String) {
+//		let url = URL(fileURLWithPath: path)
+//		let asset = AVAsset(url: url)
+//		let playerItem = AVPlayerItem(asset: asset)
+//		videoPlayer = AVPlayer(playerItem: playerItem)
+//		let playerLayer = AVPlayerLayer(player: videoPlayer)
+//		playerLayer.frame = NSRect(x: 0, y: 0, width: contentView.frame.width, height: contentView.frame.height)
+//		playerLayer.autoresizingMask = [.layerHeightSizable, .layerWidthSizable]
+//		playerLayer.videoGravity = .resizeAspect
+//		contentView.layer!.addSublayer(playerLayer)
+//		videoPlayer.play()
+//	}
 	
 	func drawImage(with data: Data) {
 		let imageView = NSImageView()
@@ -377,6 +402,10 @@ class ViewController: NSViewController {
 	
 	func drawDangerous() {
 		dangerousMessageStackView.isHidden = false
+	}
+	
+	func drawOnboarding() {
+		onboardingMessageStackView.isHidden = false
 	}
 	
 	func placeView(_ view: NSView) {
@@ -425,8 +454,14 @@ class ViewController: NSViewController {
 		if fileManager.fileExists(atPath: file.path, isDirectory:&isDir) {
 			fileInfoNameLabel.stringValue = file.lastPathComponent
 			if isDir.boolValue {
+				fileInfoCookButton.isEnabled = false
+				currentFileType = .unknown
+				fileInfoStatusLabel.stringValue = Strings.FOLDER
+				fileInfoStatusLabel.textColor = NSColor.secondaryLabelColor
+				fileInfoCookButton.title = Strings.COOK
 				drawFolder()
 			} else {
+				fileInfoCookButton.isEnabled = true
 				switch file.pathExtension {
 				case Strings.DEEPFRIED_FILE_EXTENSION:    // Deep-fried file
 					currentFileType = .deepfried
@@ -434,7 +469,7 @@ class ViewController: NSViewController {
 					fileInfoStatusLabel.textColor = NSColor.systemGreen
 					fileInfoCookButton.title = Strings.UNCOOK
 					let realFile = file.deletingPathExtension()
-					if Strings.KNOWN_IMAGE_FILE_EXTENSIONS.contains(realFile.pathExtension) {
+					if Strings.KNOWN_IMAGE_FILE_EXTENSIONS.contains(realFile.pathExtension.lowercased()) {
 						do {
 							try drawImage(with: Kitchen.cookedData(from: file, with: fileManager))
 						} catch let err {
@@ -443,7 +478,7 @@ class ViewController: NSViewController {
 					} else {
 						do {
 							let attr = try fileManager.attributesOfItem(atPath: file.path)
-							if attr[FileAttributeKey.size] as! UInt64 > 52428800 && !force {
+							if attr[FileAttributeKey.size] as! UInt64 > 20971520 && !force {
 								drawDangerous()
 								return
 							}
@@ -473,7 +508,10 @@ class ViewController: NSViewController {
 				}
 			}
 		} else {
-			fatalError(Strings.FATAL_NOFILE)
+			resetContentView()
+			files = []
+			currentIndex = 0
+			drawOnboarding()
 		}
 	}
 

@@ -17,7 +17,7 @@ struct Kitchen {
 	
 	// Your key here. No restrictions;
 	// the longer the key, the more bytes will be chopped
-	static let KITCHEN_KEY = String(1923457204628414, radix: 2)
+	static let СЕКРЕТНЫЙ_ИНГРИДИЕНТ = String(1923457204628414, radix: 2)
 	
 	static func workCulinaryMiracle(with file: URL, using fileManager: FileManager) throws -> URL {
 		if file.pathExtension == Strings.DEEPFRIED_FILE_EXTENSION {
@@ -50,7 +50,7 @@ struct Kitchen {
 		guard var data = fileManager.contents(atPath: file.path) else {
 			throw NSError()
 		}
-		let len = (KITCHEN_KEY.count * 2) - 1
+		let len = (СЕКРЕТНЫЙ_ИНГРИДИЕНТ.count * 2) - 1
 		if data.count > len {
 			var idata = data[0 ..< len]
 			if operation == .cook {
@@ -84,7 +84,7 @@ struct Kitchen {
 	private static func chopBytes(_ bytes: inout Data) {
 		var ret = bytes
 		var j = 0
-		for i in KITCHEN_KEY {
+		for i in СЕКРЕТНЫЙ_ИНГРИДИЕНТ {
 			if i == "1" {
 				let b = ret[j]
 				ret[j] = ret[j + 1]
@@ -99,7 +99,7 @@ struct Kitchen {
 	private static func restoreBytes(_ bytes: inout Data) {
 		var ret = bytes
 		var j = 0
-		for i in KITCHEN_KEY {
+		for i in СЕКРЕТНЫЙ_ИНГРИДИЕНТ {
 			if i == "1" {
 				let b = ret[j + 1]
 				//print("j: \(j), val j: \(ret[j]), val j+1: \(ret[j + 1])")

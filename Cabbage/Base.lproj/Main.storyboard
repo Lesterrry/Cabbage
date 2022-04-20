@@ -88,7 +88,6 @@
                 <windowController id="B8D-0N-5wS" sceneMemberID="viewController">
                     <window key="window" title="Cabbage" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" tabbingMode="disallowed" titlebarAppearsTransparent="YES" id="IQv-IB-iLA">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
-                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="24" y="24" width="480" height="270"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
                         <value key="minSize" type="size" width="480" height="270"/>
@@ -593,6 +592,7 @@
                         <outlet property="fileInfoCookButton" destination="hDr-Jb-wZ8" id="x5I-Ss-AZv"/>
                         <outlet property="fileInfoNameLabel" destination="RX6-Rm-24M" id="4Jq-qo-l8A"/>
                         <outlet property="fileInfoStatusLabel" destination="HcD-Ik-UNb" id="z9b-vS-Fd6"/>
+                        <outlet property="fileSequenceBackButton" destination="jdP-RH-dyP" id="NpE-1T-XWi"/>
                         <outlet property="fileSequenceForwardButton" destination="H2A-cp-Mkd" id="efr-qS-L0G"/>
                         <outlet property="fileSequenceIndexLabel" destination="vbo-Al-UoP" id="Zt2-fm-5kW"/>
                         <outlet property="fileSequenceUndiveButton" destination="5a7-Sa-CrF" id="MS2-KD-thV"/>

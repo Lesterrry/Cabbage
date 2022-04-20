@@ -10,4 +10,11 @@ Although this tool was made to __withstand any low-level approach__, person with
 - Ridiculously easy to use
 - Trustable (_read the code and build yourself_)
 - Does its thing
+- Has kitten mode (_see [shortcuts](#keyboard-shortcuts)_)
 - Makes your tummy feel yummy
+## Keyboard shortcuts
+- `RIGHT ARROW` – Equivalent of  `Next` button
+- `LEFT ARROW` – Equivalent of  `Previous` button
+- `SPACE` – __KITTEN MODE!!!__
+- `RETURN` – Cook / uncook
+- `C` – Select files 
