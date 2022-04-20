@@ -15,45 +15,44 @@ struct Kitchen {
 		case `return`
 	}
 	
+	// Your key here. No restrictions;
+	// the longer the key, the more bytes will be chopped
 	static let KITCHEN_KEY = String(1923457204628414, radix: 2)
 	
-	static func cook(_ file: URL, with fileManager: FileManager) throws -> URL {
-		guard file.pathExtension != Strings.UNDERCOOKED_FILE_EXTENSION && file.pathExtension != Strings.DEEPFRIED_FILE_EXTENSION else {
-			throw NSError()
-		}
-		if Strings.KNOWN_IMAGE_FILE_EXTENSIONS.contains(file.pathExtension) {
-			return try perform(.cook, file: file, with: fileManager).1!
+	static func workCulinaryMiracle(with file: URL, using fileManager: FileManager) throws -> URL {
+		if file.pathExtension == Strings.DEEPFRIED_FILE_EXTENSION {
+			return try uncook(file, using: fileManager)
 		} else {
-			let newFile = file.appendingPathExtension(Strings.UNDERCOOKED_FILE_EXTENSION)
-			try fileManager.moveItem(at: file, to: newFile)
-			return newFile
+			return try cook(file, using: fileManager)
 		}
 	}
 	
-	static func uncook(_ file: URL, with fileManager: FileManager) throws -> URL {
-		guard file.pathExtension == Strings.UNDERCOOKED_FILE_EXTENSION || file.pathExtension == Strings.DEEPFRIED_FILE_EXTENSION else {
+	static func cook(_ file: URL, using fileManager: FileManager) throws -> URL {
+		guard file.pathExtension != Strings.DEEPFRIED_FILE_EXTENSION else {
 			throw NSError()
 		}
-		if file.pathExtension == Strings.DEEPFRIED_FILE_EXTENSION {
-			return try perform(.uncook, file: file, with: fileManager).1!
-		} else {
-			let newFile = file.deletingPathExtension()
-			try fileManager.moveItem(at: file, to: newFile)
-			return newFile
+		return try perform(.cook, file: file, using: fileManager).1!
+	}
+	
+	static func uncook(_ file: URL, using fileManager: FileManager) throws -> URL {
+		guard file.pathExtension == Strings.DEEPFRIED_FILE_EXTENSION else {
+			throw NSError()
 		}
+		return try perform(.uncook, file: file, using: fileManager).1!
 	}
 	
 	static func cookedData(from file: URL, with fileManager: FileManager) throws -> Data {
-		return try perform(.return, file: file, with: fileManager).0!
+		return try perform(.return, file: file, using: fileManager).0!
 	}
 	
 	@discardableResult
-	private static func perform(_ operation: Operation, file: URL, with fileManager: FileManager) throws -> (Data?, URL?) {
+	private static func perform(_ operation: Operation, file: URL, using fileManager: FileManager) throws -> (Data?, URL?) {
 		guard var data = fileManager.contents(atPath: file.path) else {
 			throw NSError()
 		}
-		if data.count > 100 {
-			var idata = data[0 ..< 100]
+		let len = (KITCHEN_KEY.count * 2) - 1
+		if data.count > len {
+			var idata = data[0 ..< len]
 			if operation == .cook {
 				#if DEBUG
 				let bdata = idata
@@ -65,7 +64,7 @@ struct Kitchen {
 			} else {
 				restoreBytes(&idata)
 			}
-			data = idata + data.advanced(by: 100)
+			data = idata + data.advanced(by: len)
 		} else {
 			if operation == .cook {
 				chopBytes(&data)
@@ -86,12 +85,8 @@ struct Kitchen {
 		var ret = bytes
 		var j = 0
 		for i in KITCHEN_KEY {
-			if j >= ret.count - 1 {
-				break
-			}
 			if i == "1" {
 				let b = ret[j]
-				//print("j: \(j), val j: \(ret[j]), val j+1: \(ret[j + 1])")
 				ret[j] = ret[j + 1]
 				ret[j + 1] = b
 				j += 1
@@ -105,9 +100,6 @@ struct Kitchen {
 		var ret = bytes
 		var j = 0
 		for i in KITCHEN_KEY {
-			if j >= ret.count - 1 {
-				break
-			}
 			if i == "1" {
 				let b = ret[j + 1]
 				//print("j: \(j), val j: \(ret[j]), val j+1: \(ret[j + 1])")

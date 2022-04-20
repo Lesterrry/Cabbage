@@ -59,6 +59,10 @@ class ViewController: NSViewController {
 	@IBOutlet weak var cookingMessageProgressIndicator: NSProgressIndicator!
 	@IBOutlet weak var catastopheMessageStackView: NSStackView!
 	@IBOutlet weak var catastropheMessageDescriptionLabel: NSTextField!
+	@IBOutlet weak var dangerousMessageStackView: NSStackView!
+	@IBAction func dangerousMessageProceedButtonPressed(_ sender: Any) {
+		drawFile(files[currentIndex], force: true)
+	}
 	@IBOutlet weak var kittenImageView: NSImageView!
 	
 	//*********************************************************************
@@ -72,6 +76,7 @@ class ViewController: NSViewController {
 	var currentFileSequenceType = SequenceType.unknown
 	var alternateClickAction = false
 	let fileManager = FileManager.default
+	let tempFolder = NSTemporaryDirectory()
 	
 	enum FileType {
 		case raw
@@ -108,7 +113,7 @@ class ViewController: NSViewController {
 		super.keyDown(with: event)
 		switch event.keyCode {
 		case 12:  // Q
-			exit(0)
+			NSApp.terminate(self)
 		case 49:  // Space
 			toggleKittenMode()
 		default:
@@ -160,68 +165,83 @@ class ViewController: NSViewController {
 	
 	func resetContentView() {
 		#warning("Probably dumbass approach")
-		for i in contentView.subviews[0..<4] {
+		for i in contentView.subviews[0..<5] {
 			i.isHidden = true
 		}
-		for i in contentView.subviews[4..<contentView.subviews.count] {
+		for i in contentView.subviews[5..<contentView.subviews.count] {
 			i.removeFromSuperview()
 		}
 		if let sublayers = contentView.layer!.sublayers {
-			for i in sublayers[4..<sublayers.count] {
+			for i in sublayers[5..<sublayers.count] {
 				i.removeFromSuperlayer()
 			}
 		}
 	}
 	
-	func showCookingMessage() {
-		resetContentView()
-		cookingMessageStackView.isHidden = false
-		cookingMessageProgressIndicator.startAnimation(nil)
+	func setControlViewEnabled(_ to: Bool) {
+		chooseFilesButton.isEnabled = to
+		fileSequenceBackButton.isEnabled = to
+		fileSequenceForwardButton.isEnabled = to
+	}
+	
+	static func clearTempFolder() {
+		let tempFolder = NSTemporaryDirectory()
+		let fileManager = FileManager.default
+		let toClear = try! fileManager.contentsOfDirectory(atPath: tempFolder)
+		for i in toClear {
+			let file = tempFolder.appending("/\(i)")
+			var isDir: ObjCBool = false
+			if fileManager.fileExists(atPath: file, isDirectory:&isDir) {
+				if isDir.boolValue {
+					continue
+				}
+				try! fileManager.removeItem(atPath: file)
+			} else {
+				fatalError(Strings.FATAL_NOTEMPDIR)
+			}
+		}
 	}
 	
 	func tryCook() {
 		guard files.count > 0 else {
 			return
 		}
-		showCookingMessage()
-		if alternateClickAction {
-			for i in files {
-				do {
-					files[currentIndex] = try Kitchen.cook(i, with: fileManager)
-				} catch let err {
-					#if DEBUG
-					print(err.localizedDescription)
-					#endif
-				}
-			}
-		} else {
-			if currentFileType == .raw {
-				do {
-					files[currentIndex] = try Kitchen.cook(files[currentIndex], with: fileManager)
-				} catch let err {
-					displayAlert(title: Strings.RECOVERABLE_COOKINGCATASTROPHE, message: err.localizedDescription, buttons: Strings.FINE)
+		drawCooking()
+		setControlViewEnabled(false)
+		DispatchQueue.main.async {
+			if self.alternateClickAction {
+				for i in 0 ..< self.files.count {
+					do {
+						self.files[i] = try Kitchen.workCulinaryMiracle(with: self.files[i], using: self.fileManager)
+					} catch {
+						#if DEBUG
+						fatalError()
+						#endif
+					}
 				}
 			} else {
 				do {
-					files[currentIndex] = try Kitchen.uncook(files[currentIndex], with: fileManager)
+					self.files[self.currentIndex] = try Kitchen.workCulinaryMiracle(with: self.files[self.currentIndex], using: self.fileManager)
 				} catch let err {
-					displayAlert(title: Strings.RECOVERABLE_COOKINGCATASTROPHE, message: err.localizedDescription, buttons: Strings.FINE)
+					self.displayAlert(title: Strings.RECOVERABLE_COOKINGCATASTROPHE, message: err.localizedDescription, buttons: Strings.FINE)
 				}
 			}
+			self.drawFile(self.files[self.currentIndex])
+			self.analyzeFileSequence()
+			self.setControlViewEnabled(true)
 		}
-		drawFile(files[currentIndex])
 	}
 	
 	@discardableResult
-		func displayAlert(title: String, message: String, buttons: String...) -> Int {
-			let alert = NSAlert()
-			alert.messageText = title
-			alert.informativeText = message
-			for button in buttons{
-				alert.addButton(withTitle: button)
-			}
-			return alert.runModal().rawValue
+	func displayAlert(title: String, message: String, buttons: String...) -> Int {
+		let alert = NSAlert()
+		alert.messageText = title
+		alert.informativeText = message
+		for button in buttons{
+			alert.addButton(withTitle: button)
 		}
+		return alert.runModal().rawValue
+	}
 	
 	func drawQuickLookPreview(with path: String) {
 		let quickLookView = QLPreviewView()
@@ -257,7 +277,18 @@ class ViewController: NSViewController {
 	
 	func drawCatastrophe(_ message: String) {
 		catastropheMessageDescriptionLabel.stringValue = message
-		folderMessageStackView.isHidden = false
+		catastopheMessageStackView.isHidden = false
+		controlsView.isHidden = true
+	}
+	
+	func drawCooking() {
+		resetContentView()
+		cookingMessageStackView.isHidden = false
+		cookingMessageProgressIndicator.startAnimation(nil)
+	}
+	
+	func drawDangerous() {
+		dangerousMessageStackView.isHidden = false
 	}
 	
 	func placeView(_ view: NSView) {
@@ -284,7 +315,7 @@ class ViewController: NSViewController {
 	
 	func analyzeFileSequence() {
 		for i in files {
-			if i.pathExtension != Strings.DEEPFRIED {
+			if i.pathExtension != Strings.DEEPFRIED_FILE_EXTENSION {
 				currentFileSequenceType = .unknown
 				return
 			}
@@ -292,10 +323,10 @@ class ViewController: NSViewController {
 		currentFileSequenceType = .cooked
 	}
 	
-	func drawFile(_ file: URL) {
+	func drawFile(_ file: URL, force: Bool = false) {
 		resetContentView()
-		clearTempFolder()
-		var isDir : ObjCBool = false
+		ViewController.clearTempFolder()
+		var isDir: ObjCBool = false
 		if fileManager.fileExists(atPath: file.path, isDirectory:&isDir) {
 			fileInfoNameLabel.stringValue = file.lastPathComponent
 			if isDir.boolValue {
@@ -316,16 +347,27 @@ class ViewController: NSViewController {
 						}
 					} else {
 						do {
-							let data = try Kitchen.cookedData(from: file, with: fileManager)
+							let attr = try fileManager.attributesOfItem(atPath: file.path)
+							if attr[FileAttributeKey.size] as! UInt64 > 52428800 && !force {
+								drawDangerous()
+								return
+							}
+							drawCooking()
+							setControlViewEnabled(false)
+							DispatchQueue.main.async {
+								do {
+									let data = try Kitchen.cookedData(from: file, with: self.fileManager)
+									let tempFile = self.tempFolder.appending(realFile.lastPathComponent)
+									try data.write(to: URL(fileURLWithPath: tempFile))
+									self.drawQuickLookPreview(with: tempFile)
+									self.setControlViewEnabled(true)
+								} catch let err {
+									self.drawCatastrophe(err.localizedDescription)
+								}
+							}
 						} catch let err {
 							drawCatastrophe(err.localizedDescription)
 						}
-						// Save `data` to temp location and open via quick look
-					}
-					do {
-					try drawImage(with: Kitchen.cookedData(from: file, with: fileManager))
-					} catch let err {
-						drawCatastrophe(err.localizedDescription)
 					}
 				default:                                  // Raw file
 					currentFileType = .raw

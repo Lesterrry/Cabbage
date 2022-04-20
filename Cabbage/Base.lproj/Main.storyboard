@@ -212,7 +212,7 @@
                                                     <button horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="hDr-Jb-wZ8">
                                                         <rect key="frame" x="164" y="-1" width="36" height="14"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="width" relation="lessThanOrEqual" constant="50" id="gpc-fa-OYl"/>
+                                                            <constraint firstAttribute="width" relation="lessThanOrEqual" constant="75" id="gpc-fa-OYl"/>
                                                         </constraints>
                                                         <buttonCell key="cell" type="inline" title="Cook" bezelStyle="inline" alignment="center" scrollable="YES" lineBreakMode="clipping" borderStyle="border" inset="2" id="Hj4-xF-Qlc">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -289,14 +289,14 @@
                                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                 </textFieldCell>
                                             </textField>
-                                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="D6V-ez-t2C">
+                                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="7K7-O5-vcE">
                                                 <rect key="frame" x="55" y="-7" width="115" height="32"/>
-                                                <buttonCell key="cell" type="push" title="Choose files" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Zmj-Es-RUd">
+                                                <buttonCell key="cell" type="push" title="Choose files" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="S39-tj-XBB">
                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                     <font key="font" metaFont="system"/>
                                                 </buttonCell>
                                                 <connections>
-                                                    <action selector="chooseFilesButtonPressed:" target="XfG-lQ-9wD" id="U8S-e1-mee"/>
+                                                    <action selector="chooseFilesButtonPressed:" target="XfG-lQ-9wD" id="M3r-dr-ZT5"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -321,10 +321,10 @@
                                         </customSpacing>
                                     </stackView>
                                     <stackView hidden="YES" distribution="fill" orientation="vertical" alignment="centerX" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yQA-c0-7CA">
-                                        <rect key="frame" x="299" y="130" width="225" height="110"/>
+                                        <rect key="frame" x="299" y="116" width="225" height="139"/>
                                         <subviews>
                                             <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="TXZ-iC-9RY">
-                                                <rect key="frame" x="86" y="58" width="52" height="52"/>
+                                                <rect key="frame" x="86" y="87" width="52" height="52"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="52" id="6Gw-bd-cwB"/>
                                                     <constraint firstAttribute="height" constant="52" id="WAa-1i-vza"/>
@@ -332,7 +332,7 @@
                                                 <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="Explosion" id="cGe-xX-SIQ"/>
                                             </imageView>
                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="eKf-qr-QIK">
-                                                <rect key="frame" x="-2" y="24" width="229" height="26"/>
+                                                <rect key="frame" x="-2" y="53" width="229" height="26"/>
                                                 <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="Cooking catastrophe" id="2wD-bP-xCK">
                                                     <font key="font" metaFont="system" size="22"/>
                                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -340,13 +340,23 @@
                                                 </textFieldCell>
                                             </textField>
                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Rn7-Nf-1uK">
-                                                <rect key="frame" x="-2" y="0.0" width="229" height="16"/>
+                                                <rect key="frame" x="-2" y="29" width="229" height="16"/>
                                                 <textFieldCell key="cell" alignment="center" title="Error" id="j6m-MX-sM3">
                                                     <font key="font" metaFont="system"/>
                                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                 </textFieldCell>
                                             </textField>
+                                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Tgb-xx-qdA">
+                                                <rect key="frame" x="55" y="-7" width="115" height="32"/>
+                                                <buttonCell key="cell" type="push" title="Choose files" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="CQO-f3-O0Y">
+                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                    <font key="font" metaFont="system"/>
+                                                </buttonCell>
+                                                <connections>
+                                                    <action selector="chooseFilesButtonPressed:" target="XfG-lQ-9wD" id="ZFE-b2-KRy"/>
+                                                </connections>
+                                            </button>
                                         </subviews>
                                         <constraints>
                                             <constraint firstItem="eKf-qr-QIK" firstAttribute="leading" secondItem="yQA-c0-7CA" secondAttribute="leading" id="3Cg-Nm-zop"/>
@@ -359,8 +369,68 @@
                                             <integer value="1000"/>
                                             <integer value="1000"/>
                                             <integer value="1000"/>
+                                            <integer value="1000"/>
                                         </visibilityPriorities>
                                         <customSpacing>
+                                            <real value="3.4028234663852886e+38"/>
+                                            <real value="3.4028234663852886e+38"/>
+                                            <real value="3.4028234663852886e+38"/>
+                                            <real value="3.4028234663852886e+38"/>
+                                        </customSpacing>
+                                    </stackView>
+                                    <stackView hidden="YES" distribution="fill" orientation="vertical" alignment="centerX" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wRj-ac-eT8">
+                                        <rect key="frame" x="299" y="108" width="225" height="155"/>
+                                        <subviews>
+                                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="BMl-gE-9DZ">
+                                                <rect key="frame" x="86" y="103" width="52" height="52"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="52" id="A70-9S-59Y"/>
+                                                    <constraint firstAttribute="width" constant="52" id="yaN-1O-4DQ"/>
+                                                </constraints>
+                                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="Biohazard" id="lZO-8F-TJO"/>
+                                            </imageView>
+                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Pf9-0u-aGo">
+                                                <rect key="frame" x="-2" y="69" width="229" height="26"/>
+                                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="Dangerous salad" id="sKD-4w-dnM">
+                                                    <font key="font" metaFont="system" size="22"/>
+                                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                            </textField>
+                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="eX3-s9-jpe">
+                                                <rect key="frame" x="-2" y="29" width="229" height="32"/>
+                                                <textFieldCell key="cell" alignment="center" title="This file is large, cooking it may take a while" id="59k-x0-8XL">
+                                                    <font key="font" metaFont="system"/>
+                                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                            </textField>
+                                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="D6V-ez-t2C">
+                                                <rect key="frame" x="67" y="-7" width="91" height="32"/>
+                                                <buttonCell key="cell" type="push" title="Proceed" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Zmj-Es-RUd">
+                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                    <font key="font" metaFont="system"/>
+                                                </buttonCell>
+                                                <connections>
+                                                    <action selector="dangerousMessageProceedButtonPressed:" target="XfG-lQ-9wD" id="03A-vJ-Y4h"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="Pf9-0u-aGo" secondAttribute="trailing" id="CTv-CA-ANd"/>
+                                            <constraint firstItem="Pf9-0u-aGo" firstAttribute="leading" secondItem="wRj-ac-eT8" secondAttribute="leading" id="IHC-ta-fbn"/>
+                                            <constraint firstAttribute="trailing" secondItem="eX3-s9-jpe" secondAttribute="trailing" id="a4f-SF-N3P"/>
+                                            <constraint firstItem="eX3-s9-jpe" firstAttribute="leading" secondItem="wRj-ac-eT8" secondAttribute="leading" id="mN0-qw-sph"/>
+                                            <constraint firstAttribute="width" constant="225" id="tGe-It-xUe"/>
+                                        </constraints>
+                                        <visibilityPriorities>
+                                            <integer value="1000"/>
+                                            <integer value="1000"/>
+                                            <integer value="1000"/>
+                                            <integer value="1000"/>
+                                        </visibilityPriorities>
+                                        <customSpacing>
+                                            <real value="3.4028234663852886e+38"/>
                                             <real value="3.4028234663852886e+38"/>
                                             <real value="3.4028234663852886e+38"/>
                                             <real value="3.4028234663852886e+38"/>
@@ -475,6 +545,8 @@
                                     <constraint firstItem="a1Q-Bj-QD9" firstAttribute="centerX" secondItem="Ra0-qn-K3k" secondAttribute="centerX" id="bX0-J6-fyu"/>
                                     <constraint firstItem="iYz-a9-d2g" firstAttribute="centerY" secondItem="Ra0-qn-K3k" secondAttribute="centerY" id="cVw-GI-Erl"/>
                                     <constraint firstItem="Xr5-mG-pul" firstAttribute="centerY" secondItem="Ra0-qn-K3k" secondAttribute="centerY" id="j36-TU-L0d"/>
+                                    <constraint firstItem="wRj-ac-eT8" firstAttribute="centerX" secondItem="Ra0-qn-K3k" secondAttribute="centerX" id="klK-0M-cBr"/>
+                                    <constraint firstItem="wRj-ac-eT8" firstAttribute="centerY" secondItem="Ra0-qn-K3k" secondAttribute="centerY" id="mww-35-DsF"/>
                                 </constraints>
                             </customView>
                             <imageView hidden="YES" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="qqc-zA-cVs">
@@ -505,6 +577,7 @@
                         <outlet property="controlsView" destination="wbV-0M-9hh" id="gGj-AC-Tdr"/>
                         <outlet property="cookingMessageProgressIndicator" destination="H5F-CP-hi3" id="CRj-iU-HU5"/>
                         <outlet property="cookingMessageStackView" destination="iYz-a9-d2g" id="z9q-N0-oay"/>
+                        <outlet property="dangerousMessageStackView" destination="wRj-ac-eT8" id="URY-Hy-3Ec"/>
                         <outlet property="fileInfoCookButton" destination="hDr-Jb-wZ8" id="x5I-Ss-AZv"/>
                         <outlet property="fileInfoNameLabel" destination="RX6-Rm-24M" id="4Jq-qo-l8A"/>
                         <outlet property="fileInfoStatusLabel" destination="HcD-Ik-UNb" id="z9b-vS-Fd6"/>
@@ -522,6 +595,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="Biohazard" width="120" height="120"/>
         <image name="Explosion" width="120" height="120"/>
         <image name="Folder" width="120" height="120"/>
         <image name="Kitten" width="639" height="454"/>
