@@ -129,26 +129,39 @@
                                             <action selector="chooseFilesButtonPressed:" target="XfG-lQ-9wD" id="j7x-Ps-yNR"/>
                                         </connections>
                                     </button>
-                                    <stackView distribution="fill" orientation="horizontal" alignment="centerY" spacing="16" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2p4-9T-niL" userLabel="File Sequence Stack View">
+                                    <stackView distribution="fillEqually" orientation="horizontal" alignment="centerY" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2p4-9T-niL" userLabel="File Sequence Stack View">
                                         <rect key="frame" x="372" y="25" width="118" height="21"/>
                                         <subviews>
-                                            <button horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="5a7-Sa-CrF">
+                                            <button hidden="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="5a7-Sa-CrF">
                                                 <rect key="frame" x="-6" y="-7" width="46" height="32"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="34" id="sxt-6s-zvq"/>
                                                 </constraints>
-                                                <buttonCell key="cell" type="push" bezelStyle="rounded" image="NSGoBackTemplate" imagePosition="only" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ZZ2-87-dac">
+                                                <buttonCell key="cell" type="push" bezelStyle="rounded" image="NSStopProgressTemplate" imagePosition="only" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ZZ2-87-dac">
                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                     <font key="font" metaFont="system"/>
                                                 </buttonCell>
                                                 <connections>
-                                                    <action selector="fileSequenceBackButtonPressed:" target="XfG-lQ-9wD" id="gfi-ae-Z9y"/>
+                                                    <action selector="fileSequenceUndiveButtonPressed:" target="XfG-lQ-9wD" id="0hk-cd-Bgz"/>
+                                                </connections>
+                                            </button>
+                                            <button horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="jdP-RH-dyP">
+                                                <rect key="frame" x="-6" y="-7" width="46" height="32"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="34" id="hcV-ov-5im"/>
+                                                </constraints>
+                                                <buttonCell key="cell" type="push" bezelStyle="rounded" image="NSGoBackTemplate" imagePosition="only" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="X1p-Cg-iu0">
+                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                    <font key="font" metaFont="system"/>
+                                                </buttonCell>
+                                                <connections>
+                                                    <action selector="fileSequenceBackButtonPressed:" target="XfG-lQ-9wD" id="RKb-Qf-5Lf"/>
                                                 </connections>
                                             </button>
                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="vbo-Al-UoP">
-                                                <rect key="frame" x="48" y="3" width="22" height="16"/>
+                                                <rect key="frame" x="40" y="3" width="38" height="16"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="18" id="bzv-9O-3C9"/>
+                                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="50" id="bzv-9O-3C9"/>
                                                 </constraints>
                                                 <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="--" id="xqC-oY-gBf">
                                                     <font key="font" metaFont="system"/>
@@ -170,15 +183,14 @@
                                                 </connections>
                                             </button>
                                         </subviews>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="118" id="zTb-Lt-DRf"/>
-                                        </constraints>
                                         <visibilityPriorities>
+                                            <integer value="1000"/>
                                             <integer value="1000"/>
                                             <integer value="1000"/>
                                             <integer value="1000"/>
                                         </visibilityPriorities>
                                         <customSpacing>
+                                            <real value="3.4028234663852886e+38"/>
                                             <real value="3.4028234663852886e+38"/>
                                             <real value="3.4028234663852886e+38"/>
                                             <real value="3.4028234663852886e+38"/>
@@ -581,9 +593,9 @@
                         <outlet property="fileInfoCookButton" destination="hDr-Jb-wZ8" id="x5I-Ss-AZv"/>
                         <outlet property="fileInfoNameLabel" destination="RX6-Rm-24M" id="4Jq-qo-l8A"/>
                         <outlet property="fileInfoStatusLabel" destination="HcD-Ik-UNb" id="z9b-vS-Fd6"/>
-                        <outlet property="fileSequenceBackButton" destination="5a7-Sa-CrF" id="irC-G0-DVU"/>
                         <outlet property="fileSequenceForwardButton" destination="H2A-cp-Mkd" id="efr-qS-L0G"/>
                         <outlet property="fileSequenceIndexLabel" destination="vbo-Al-UoP" id="Zt2-fm-5kW"/>
+                        <outlet property="fileSequenceUndiveButton" destination="5a7-Sa-CrF" id="MS2-KD-thV"/>
                         <outlet property="folderMessageStackView" destination="a1Q-Bj-QD9" id="de9-7D-uF2"/>
                         <outlet property="kittenImageView" destination="qqc-zA-cVs" id="vwX-gW-neu"/>
                         <outlet property="onboardingMessageStackView" destination="Xr5-mG-pul" id="SOV-sr-5bB"/>
@@ -602,6 +614,7 @@
         <image name="Leafy green" width="120" height="120"/>
         <image name="NSGoBackTemplate" width="9" height="12"/>
         <image name="NSGoForwardTemplate" width="9" height="12"/>
+        <image name="NSStopProgressTemplate" width="11" height="11"/>
         <image name="Pot" width="120" height="120"/>
     </resources>
 </document>
