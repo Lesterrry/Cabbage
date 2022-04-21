@@ -18,3 +18,4 @@ Although this tool was made to __withstand any low-level approach__, person with
   - `SPACE` – __KITTEN MODE!!!__
   - `RETURN` – Cook / uncook
   - `C` – Select files 
+  - `⌥ Option` – Show alternative control button actions (_if held_) 

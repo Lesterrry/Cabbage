@@ -7,37 +7,59 @@
 
 import Foundation
 
+/// Collection of internal algorithms to operate bytes
 struct Kitchen {
-
+	
+	/// Action to perform on a file: make unreadable, revert to original or return readable data from unreadable file
 	private enum Operation {
 		case cook
 		case uncook
 		case `return`
 	}
 
-	// Your key here. No restrictions;
-	// the longer the key, the more bytes will be chopped
+	/// Numeric key to use while chopping bytes. The longer the key, the more bytes will be modified
 	static let СЕКРЕТНЫЙ_ИНГРИДИЕНТ = String(1923457204628414, radix: 2)
-
+	
+	/// Extensions of files to display in `NSImageView` instead of Quick Look
 	static let KNOWN_IMAGE_FILE_EXTENSIONS = ["jpg", "jpeg", "gif", "png"]
-
+	
+	/// Extension of file to consider modified
+	static let DEEPFRIED_FILE_EXTENSION = "cbbd"
+	
+	/// Figure out whether to cook or to uncook a file and do it
+	/// - Parameters:
+	///   - file: File to modify
+	///   - fileManager: `FileManager` to use
+	/// - Throws: If the modification failed
+	/// - Returns: New file's `URL`
 	static func workCulinaryMiracle(with file: URL, using fileManager: FileManager) throws -> URL {
-		if file.pathExtension == Strings.DEEPFRIED_FILE_EXTENSION {
+		if file.pathExtension == DEEPFRIED_FILE_EXTENSION {
 			return try uncook(file, using: fileManager)
 		} else {
 			return try cook(file, using: fileManager)
 		}
 	}
-
+	
+	/// Modify file's bytes
+	/// - Parameters:
+	///   - file: File to modify
+	///   - fileManager: `FileManager` to use
+	/// - Throws: If the modification failed
+	/// - Returns: New file's `URL`
 	static func cook(_ file: URL, using fileManager: FileManager) throws -> URL {
-		guard file.pathExtension != Strings.DEEPFRIED_FILE_EXTENSION else {
+		guard file.pathExtension != DEEPFRIED_FILE_EXTENSION else {
 			throw NSError()
 		}
 		return try perform(.cook, file: file, using: fileManager).1!
 	}
-
+	/// Revert file to original
+	/// - Parameters:
+	///   - file: File to revert
+	///   - fileManager: `FileManager` to use
+	/// - Throws: If the reversion failed
+	/// - Returns: Reverted file's `URL`
 	static func uncook(_ file: URL, using fileManager: FileManager) throws -> URL {
-		guard file.pathExtension == Strings.DEEPFRIED_FILE_EXTENSION else {
+		guard file.pathExtension == DEEPFRIED_FILE_EXTENSION else {
 			throw NSError()
 		}
 		return try perform(.uncook, file: file, using: fileManager).1!
@@ -46,7 +68,13 @@ struct Kitchen {
 	static func cookedData(from file: URL, with fileManager: FileManager) throws -> Data {
 		return try perform(.return, file: file, using: fileManager).0!
 	}
-
+	/// Perform a specific action on a file
+	/// - Parameters:
+	///   - operation: Wheter to `cook`, `uncook` or `return` data
+	///   - file: File to access
+	///   - fileManager: `FileManager` to use
+	/// - Throws: If the action failed
+	/// - Returns: Data (bytes) if `return` is needed, new file path otherwise
 	@discardableResult
 	private static func perform(
 		_ operation: Operation,
@@ -82,7 +110,7 @@ struct Kitchen {
 			return (data, nil)
 		}
 		let newFile = operation == .cook ?
-			file.appendingPathExtension(Strings.DEEPFRIED_FILE_EXTENSION) :
+			file.appendingPathExtension(DEEPFRIED_FILE_EXTENSION) :
 			file.deletingPathExtension()
 		try data.write(to: file)
 		try fileManager.moveItem(at: file, to: newFile)

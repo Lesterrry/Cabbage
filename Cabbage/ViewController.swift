@@ -8,8 +8,8 @@
 import Cocoa
 import AppKit
 import Quartz
-import AVFoundation
 
+/// Main view class, referencing the parent view in the Storyboard
 class MainView: NSView {
 
 	override func performKeyEquivalent(with event: NSEvent) -> Bool {
@@ -22,12 +22,15 @@ class MainView: NSView {
 
 }
 
+/// Quick Look item representation
 class MyQuickLookItem: NSObject, QLPreviewItem {
-
+	
+	/// File URL to show in Quick Look
 	var previewItemURL: URL!
 
 }
 
+/// Main view controller class, referencing the parent view controller in the Storyboard
 class ViewController: NSViewController {
 
 	//*********************************************************************
@@ -40,18 +43,18 @@ class ViewController: NSViewController {
 	@IBOutlet weak var fileSequenceBackButton: NSButton!
 	@IBAction func fileSequenceBackButtonPressed(_ sender: Any) {
 		if alternateClickAction {
-			moveSequence(.home)
+			moveSequenceIndex(.home)
 		} else {
-			moveSequence(.backward)
+			moveSequenceIndex(.backward)
 		}
 	}
 	@IBOutlet weak var fileSequenceIndexLabel: NSTextField!
 	@IBOutlet weak var fileSequenceForwardButton: NSButton!
 	@IBAction func fileSequenceForwardButtonPressed(_ sender: Any) {
 		if alternateClickAction {
-			moveSequence(.random)
+			moveSequenceIndex(.random)
 		} else {
-			moveSequence(.forward)
+			moveSequenceIndex(.forward)
 		}
 	}
 	@IBOutlet weak var fileSequenceUndiveButton: NSButton!
@@ -90,22 +93,24 @@ class ViewController: NSViewController {
 	var currentFileType = FileType.unknown
 	var currentFileSequenceType = SequenceType.unknown
 	var alternateClickAction = false
-	lazy var videoPlayer: AVPlayer = AVPlayer()
 	lazy var divingHistory: [URL] = []
 	lazy var predivingFiles: [URL]? = nil
 	let fileManager = FileManager.default
 	let tempFolder = NSTemporaryDirectory()
 	
+	/// A state of file: `raw` if untouched, `deepfried` if its bytes were chopped
 	enum FileType {
 		case raw
 		case deepfried
 		case unknown
 	}
+	/// A state of sequence: `cooked` if all files are cooked, `unknown` otherwise
 	enum SequenceType {
 		case cooked
 		case unknown
 	}
-	enum SequenceMoveType {
+	/// A direction in which to move the current index within the file sequence
+	enum IndexMoveType {
 		case forward
 		case backward
 		case home
@@ -144,9 +149,9 @@ class ViewController: NSViewController {
 		case 49:  // Space
 			toggleKittenMode()
 		case 124:  // Right
-			moveSequence(.forward)
+			moveSequenceIndex(.forward)
 		case 123:  // Left
-			moveSequence(.backward)
+			moveSequenceIndex(.backward)
 		case 36:  // Return
 			tryCook()
 		case 8:  // `C`
@@ -159,6 +164,7 @@ class ViewController: NSViewController {
 			#endif
 		}
 	}
+	/// Keyboard special keys' state changed (e.g. `Option` key)
 	func myFlagsChanged(with event: NSEvent) {
 		super.flagsChanged(with: event)
 		guard currentFileType != .unknown else {
@@ -191,6 +197,8 @@ class ViewController: NSViewController {
 	//*********************************************************************
 	// MARK: GENERAL DATA SECTION
 	//*********************************************************************
+	
+	/// Remove all content from Content View
 	func resetContentView() {
 		for i in contentView.subviews[0..<5] {
 			i.isHidden = true
@@ -204,11 +212,14 @@ class ViewController: NSViewController {
 			}
 		}
 	}
+	/// Change all control buttons' `Enabled` parameter to provided
+	/// - Parameter to: Whether Enable
 	func setControlViewEnabled(_ to: Bool) {
 		chooseFilesButton.isEnabled = to
 		fileSequenceBackButton.isEnabled = to
 		fileSequenceForwardButton.isEnabled = to
 	}
+	/// Remove all files from temp folder
 	static func clearTempFolder() {
 		let tempFolder = NSTemporaryDirectory()
 		let fileManager = FileManager.default
@@ -228,22 +239,13 @@ class ViewController: NSViewController {
 			}
 		}
 	}
+	/// Set file sequence label's text to suit current file sequence & current index
 	func setFileSequenceIndexLabel() {
 		fileSequenceIndexLabel.stringValue = "\(currentIndex + 1)/\(files.count)"
 	}
-	func toggleKittenMode() {
-		switch kittenMode {
-		case false:
-			kittenImageView.isHidden = false
-			videoPlayer.pause()
-			kittenMode = true
-		case true:
-			kittenImageView.isHidden = true
-			videoPlayer.play()
-			kittenMode = false
-		}
-	}
-	func moveSequence(_ to: SequenceMoveType) {
+	/// Move current index to specified direction
+	/// - Parameter to: Direction which to move index in
+	func moveSequenceIndex(_ to: IndexMoveType) {
 		switch to {
 		case .backward:
 			if currentIndex > 0 {
@@ -265,13 +267,16 @@ class ViewController: NSViewController {
 		setFileSequenceIndexLabel()
 		drawFile(files[currentIndex])
 	}
+	/// Set `currentFilesSequenceType` to suit current file sequence
 	func analyzeFileSequence() {
-		for i in files where i.pathExtension != Strings.DEEPFRIED_FILE_EXTENSION {
+		for i in files where i.pathExtension != Kitchen.DEEPFRIED_FILE_EXTENSION {
 			currentFileSequenceType = .unknown
 			return
 		}
 		currentFileSequenceType = .cooked
 	}
+	/// Go into the current folder & list its contents
+	/// - Throws: If the directory couldn't be read
 	func dive() throws {
 		let folder = files[currentIndex]
 		var isDir: ObjCBool = false
@@ -288,6 +293,8 @@ class ViewController: NSViewController {
 		setFileSequenceIndexLabel()
 		drawFile(files[0])
 	}
+	/// Go one layer up in directories hierarchy (up to the initial file sequence)
+	/// - Throws: If the directory couldn't be read
 	func undive() throws {
 		guard let pref = predivingFiles else {
 			return
@@ -304,6 +311,9 @@ class ViewController: NSViewController {
 		setFileSequenceIndexLabel()
 		drawFile(files[0])
 	}
+	/// Fill `files` array with contents of the specified directory
+	/// - Parameter folder: Directory to read
+	/// - Throws: If the directory couldn't be read
 	func fillFiles(with folder: URL) throws {
 		let newFiles = try fileManager.contentsOfDirectory(atPath: folder.path)
 		guard newFiles.count > 0 else {
@@ -328,12 +338,14 @@ class ViewController: NSViewController {
 		}
 		return alert.runModal().rawValue
 	}
+	/// Display file dialog & fill `files` array with user selected files
 	func askForFiles() {
 		let panel = NSOpenPanel()
 		panel.allowsMultipleSelection = true
 		panel.canChooseDirectories = true
 		if panel.runModal() == .OK {
 			guard panel.urls.count > 0 else {
+				files = []
 				return
 			}
 			onboardingMessageStackView.isHidden = true
@@ -344,6 +356,21 @@ class ViewController: NSViewController {
 			drawFile(files[currentIndex])
 		}
 	}
+	/// Show kitten if needed; hide it if not
+	func toggleKittenMode() {
+		switch kittenMode {
+		case false:
+			resetContentView()
+			kittenImageView.isHidden = false
+			kittenMode = true
+		case true:
+			kittenImageView.isHidden = true
+			drawFile(files[currentIndex])
+			kittenMode = false
+		}
+	}
+	/// Show Quick Look preview in the content view
+	/// - Parameter path: File to display in Quick Look
 	func drawQuickLookPreview(with path: String) {
 		let quickLookView = QLPreviewView()
 		let quickLookItem = MyQuickLookItem()
@@ -351,30 +378,40 @@ class ViewController: NSViewController {
 		quickLookView.previewItem = quickLookItem
 		placeView(quickLookView)
 	}
+	/// Draw NSImage in the content view
+	/// - Parameter data: Data to build image from
 	func drawImage(with data: Data) {
 		let imageView = NSImageView()
 		imageView.image = NSImage(data: data)
 		placeView(imageView)
 	}
+	/// Show 'This is a folder' message in the content view
 	func drawFolder() {
 		folderMessageStackView.isHidden = false
 	}
+	/// Show 'Cooking catastrophe' message in the content view
+	/// - Parameter message: Error message to show in the subtitle
 	func drawCatastrophe(_ message: String) {
 		catastropheMessageDescriptionLabel.stringValue = message
 		catastopheMessageStackView.isHidden = false
 		controlsView.isHidden = true
 	}
+	/// Show 'Cooking...' message in the content view
 	func drawCooking() {
 		resetContentView()
 		cookingMessageStackView.isHidden = false
 		cookingMessageProgressIndicator.startAnimation(nil)
 	}
+	/// Show 'Dangerous salad' message in the content view
 	func drawDangerous() {
 		dangerousMessageStackView.isHidden = false
 	}
+	/// Show welcome message in the content view
 	func drawOnboarding() {
 		onboardingMessageStackView.isHidden = false
 	}
+	/// Show a view in the content view
+	/// - Parameter view: View to show in the content view
 	func placeView(_ view: NSView) {
 		view.frame = NSRect(x: 0, y: 0, width: contentView.frame.width, height: contentView.frame.height)
 		view.autoresizingMask = [.height, .width]
@@ -384,6 +421,8 @@ class ViewController: NSViewController {
 	//*********************************************************************
 	// MARK: LOGIC SESSION
 	//*********************************************************************
+	
+	/// Cook or uncook current file or all files in the sequence (if alt. action is enabled)
 	func tryCook() {
 		guard files.count > 0 else {
 			return
@@ -420,6 +459,10 @@ class ViewController: NSViewController {
 			self.setControlViewEnabled(true)
 		}
 	}
+	/// Display specified file in the content view
+	/// - Parameters:
+	///   - file: File to display
+	///   - force: Whether to ignore 'large file' warning
 	func drawFile(_ file: URL, force: Bool = false) {
 		resetContentView()
 		ViewController.clearTempFolder()
@@ -436,7 +479,7 @@ class ViewController: NSViewController {
 			} else {
 				fileInfoCookButton.isEnabled = true
 				switch file.pathExtension {
-				case Strings.DEEPFRIED_FILE_EXTENSION:    // Deep-fried file
+				case Kitchen.DEEPFRIED_FILE_EXTENSION:    // Deep-fried file
 					currentFileType = .deepfried
 					fileInfoStatusLabel.stringValue = Strings.DEEPFRIED
 					fileInfoStatusLabel.textColor = NSColor.systemGreen

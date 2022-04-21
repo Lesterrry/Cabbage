@@ -7,9 +7,9 @@
 
 import Foundation
 
+/// All UI messages to show user
 public struct Strings {
 	
-	static let DEEPFRIED_FILE_EXTENSION = "cbbd"
 	static let DEEPFRIED = "Deep-fried"
 	static let RAW = "Raw"
 	static let FOLDER = "Folder"
