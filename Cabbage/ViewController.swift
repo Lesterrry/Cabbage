@@ -29,7 +29,7 @@ class MyQuickLookItem: NSObject, QLPreviewItem {
 }
 
 class ViewController: NSViewController {
-	
+
 	//*********************************************************************
 	// MARK: OUTLETS & ACTIONS
 	//*********************************************************************
@@ -159,7 +159,6 @@ class ViewController: NSViewController {
 			#endif
 		}
 	}
-	
 	func myFlagsChanged(with event: NSEvent) {
 		super.flagsChanged(with: event)
 		guard currentFileType != .unknown else {
@@ -188,7 +187,7 @@ class ViewController: NSViewController {
 			}
 		}
 	}
-	
+
 	//*********************************************************************
 	// MARK: GENERAL DATA SECTION
 	//*********************************************************************
@@ -205,13 +204,11 @@ class ViewController: NSViewController {
 			}
 		}
 	}
-	
 	func setControlViewEnabled(_ to: Bool) {
 		chooseFilesButton.isEnabled = to
 		fileSequenceBackButton.isEnabled = to
 		fileSequenceForwardButton.isEnabled = to
 	}
-	
 	static func clearTempFolder() {
 		let tempFolder = NSTemporaryDirectory()
 		let fileManager = FileManager.default
@@ -231,11 +228,9 @@ class ViewController: NSViewController {
 			}
 		}
 	}
-	
 	func setFileSequenceIndexLabel() {
 		fileSequenceIndexLabel.stringValue = "\(currentIndex + 1)/\(files.count)"
 	}
-	
 	func toggleKittenMode() {
 		switch kittenMode {
 		case false:
@@ -248,7 +243,6 @@ class ViewController: NSViewController {
 			kittenMode = false
 		}
 	}
-	
 	func moveSequence(_ to: SequenceMoveType) {
 		switch to {
 		case .backward:
@@ -271,7 +265,6 @@ class ViewController: NSViewController {
 		setFileSequenceIndexLabel()
 		drawFile(files[currentIndex])
 	}
-	
 	func analyzeFileSequence() {
 		for i in files where i.pathExtension != Strings.DEEPFRIED_FILE_EXTENSION {
 			currentFileSequenceType = .unknown
@@ -279,7 +272,6 @@ class ViewController: NSViewController {
 		}
 		currentFileSequenceType = .cooked
 	}
-	
 	func dive() throws {
 		let folder = files[currentIndex]
 		var isDir: ObjCBool = false
@@ -296,7 +288,6 @@ class ViewController: NSViewController {
 		setFileSequenceIndexLabel()
 		drawFile(files[0])
 	}
-	
 	func undive() throws {
 		guard let pref = predivingFiles else {
 			return
@@ -313,7 +304,6 @@ class ViewController: NSViewController {
 		setFileSequenceIndexLabel()
 		drawFile(files[0])
 	}
-	
 	func fillFiles(with folder: URL) throws {
 		let newFiles = try fileManager.contentsOfDirectory(atPath: folder.path)
 		guard newFiles.count > 0 else {
@@ -324,7 +314,7 @@ class ViewController: NSViewController {
 			files.append(folder.appendingPathComponent(f))
 		}
 	}
-	
+
 	//*********************************************************************
 	// MARK: UI SECTION
 	//*********************************************************************
@@ -338,7 +328,6 @@ class ViewController: NSViewController {
 		}
 		return alert.runModal().rawValue
 	}
-	
 	func askForFiles() {
 		let panel = NSOpenPanel()
 		panel.allowsMultipleSelection = true
@@ -355,7 +344,6 @@ class ViewController: NSViewController {
 			drawFile(files[currentIndex])
 		}
 	}
-	
 	func drawQuickLookPreview(with path: String) {
 		let quickLookView = QLPreviewView()
 		let quickLookItem = MyQuickLookItem()
@@ -363,58 +351,36 @@ class ViewController: NSViewController {
 		quickLookView.previewItem = quickLookItem
 		placeView(quickLookView)
 	}
-	
-//	#warning("Unused")
-//	func drawVideoPlayer(with path: String) {
-//		let url = URL(fileURLWithPath: path)
-//		let asset = AVAsset(url: url)
-//		let playerItem = AVPlayerItem(asset: asset)
-//		videoPlayer = AVPlayer(playerItem: playerItem)
-//		let playerLayer = AVPlayerLayer(player: videoPlayer)
-//		playerLayer.frame = NSRect(x: 0, y: 0, width: contentView.frame.width, height: contentView.frame.height)
-//		playerLayer.autoresizingMask = [.layerHeightSizable, .layerWidthSizable]
-//		playerLayer.videoGravity = .resizeAspect
-//		contentView.layer!.addSublayer(playerLayer)
-//		videoPlayer.play()
-//	}
-	
 	func drawImage(with data: Data) {
 		let imageView = NSImageView()
-		//let imageData = Data(contentsOf: <#T##URL#>)
 		imageView.image = NSImage(data: data)
 		placeView(imageView)
 	}
-	
 	func drawFolder() {
 		folderMessageStackView.isHidden = false
 	}
-	
 	func drawCatastrophe(_ message: String) {
 		catastropheMessageDescriptionLabel.stringValue = message
 		catastopheMessageStackView.isHidden = false
 		controlsView.isHidden = true
 	}
-	
 	func drawCooking() {
 		resetContentView()
 		cookingMessageStackView.isHidden = false
 		cookingMessageProgressIndicator.startAnimation(nil)
 	}
-	
 	func drawDangerous() {
 		dangerousMessageStackView.isHidden = false
 	}
-	
 	func drawOnboarding() {
 		onboardingMessageStackView.isHidden = false
 	}
-	
 	func placeView(_ view: NSView) {
 		view.frame = NSRect(x: 0, y: 0, width: contentView.frame.width, height: contentView.frame.height)
 		view.autoresizingMask = [.height, .width]
 		contentView.addSubview(view)
 	}
-	
+
 	//*********************************************************************
 	// MARK: LOGIC SESSION
 	//*********************************************************************
@@ -454,7 +420,6 @@ class ViewController: NSViewController {
 			self.setControlViewEnabled(true)
 		}
 	}
-	
 	func drawFile(_ file: URL, force: Bool = false) {
 		resetContentView()
 		ViewController.clearTempFolder()
@@ -477,7 +442,7 @@ class ViewController: NSViewController {
 					fileInfoStatusLabel.textColor = NSColor.systemGreen
 					fileInfoCookButton.title = Strings.UNCOOK
 					let realFile = file.deletingPathExtension()
-					if Strings.KNOWN_IMAGE_FILE_EXTENSIONS.contains(realFile.pathExtension.lowercased()) {
+					if Kitchen.KNOWN_IMAGE_FILE_EXTENSIONS.contains(realFile.pathExtension.lowercased()) {
 						do {
 							try drawImage(with: Kitchen.cookedData(from: file, with: fileManager))
 						} catch let err {

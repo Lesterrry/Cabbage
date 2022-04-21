@@ -23,5 +23,5 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	@IBAction func visitGithubMenuItemPressed(_ sender: Any) {
 		NSWorkspace.shared.open(URL(string: "https://github.com/Lesterrry/Cabbage")!)
 	}
-	
+
 }

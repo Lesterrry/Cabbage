@@ -23,6 +23,5 @@ public struct Strings {
 	static let FATAL_NOTFOLDER = "This is not a folder"
 	static let RECOVERABLE_COOKINGCATASTROPHE = "Cooking didn't end up well"
 	static let RECOVERABLE_COOKINGDATACATASTROPHE = "Couldn't view file"
-	static let KNOWN_IMAGE_FILE_EXTENSIONS = ["jpg", "jpeg", "gif", "png", "webp"]
 
 }
