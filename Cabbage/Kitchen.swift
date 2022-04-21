@@ -19,13 +19,13 @@ struct Kitchen {
 
 	/// Numeric key to use while chopping bytes. The longer the key, the more bytes will be modified
 	static let СЕКРЕТНЫЙ_ИНГРИДИЕНТ = String(1923457204628414, radix: 2)
-	
+
 	/// Extensions of files to display in `NSImageView` instead of Quick Look
 	static let KNOWN_IMAGE_FILE_EXTENSIONS = ["jpg", "jpeg", "gif", "png"]
-	
+
 	/// Extension of file to consider modified
 	static let DEEPFRIED_FILE_EXTENSION = "cbbd"
-	
+
 	/// Figure out whether to cook or to uncook a file and do it
 	/// - Parameters:
 	///   - file: File to modify
@@ -39,7 +39,6 @@ struct Kitchen {
 			return try cook(file, using: fileManager)
 		}
 	}
-	
 	/// Modify file's bytes
 	/// - Parameters:
 	///   - file: File to modify
@@ -64,7 +63,6 @@ struct Kitchen {
 		}
 		return try perform(.uncook, file: file, using: fileManager).1!
 	}
-
 	static func cookedData(from file: URL, with fileManager: FileManager) throws -> Data {
 		return try perform(.return, file: file, using: fileManager).0!
 	}
