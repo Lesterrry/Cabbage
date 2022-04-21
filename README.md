@@ -5,17 +5,17 @@
 A cool tool which __messes up__ a portion of __your files' bytes__, making them unreadable and __unrecognizable by any usual software__, but __readable by Cabbage__ itself. This is useful when you're trying to hide your priceless chinese fart porn from your momma's eyes.\
 Although this tool was made to __withstand any low-level approach__, person with high computer knowledge will eventually find a way to read the files. So, to further protect yourself, I recommend using Cabbage with, for example, an APFS encrypted external drive.\ 
 ## Why Cabbage
-  - Lightning fast
-  - Tiny
-  - Ridiculously easy to use
-  - Trustable (_read the code and build yourself_)
-  - Does its thing
-  - Has kitten mode (_see [shortcuts](#keyboard-shortcuts)_)
-  - Makes your tummy feel yummy
+-  Lightning fast
+-  Tiny
+-  Ridiculously easy to use
+-  Trustable (_read the code and build yourself_)
+-  Does its thing
+-  Has kitten mode (_see [shortcuts](#keyboard-shortcuts)_)
+-  Makes your tummy feel yummy
 ## Keyboard shortcuts
-  - `RIGHT ARROW` – Equivalent of  `Next` button
-  - `LEFT ARROW` – Equivalent of  `Previous` button
-  - `SPACE` – __KITTEN MODE!!!__
-  - `RETURN` – Cook / uncook
-  - `C` – Select files 
-  - `⌥ Option` – Show alternative control button actions (_if held_) 
+-  `RIGHT ARROW` – Equivalent of  `Next` button
+-  `LEFT ARROW` – Equivalent of  `Previous` button
+-  `SPACE` – __KITTEN MODE!!!__
+-  `RETURN` – Cook / uncook
+-  `C` – Select files 
+-  `⌥ Option` – Show alternative control button actions (_if held_) 

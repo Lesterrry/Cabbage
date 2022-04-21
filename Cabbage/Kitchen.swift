@@ -9,7 +9,7 @@ import Foundation
 
 /// Collection of internal algorithms to operate bytes
 struct Kitchen {
-	
+
 	/// Action to perform on a file: make unreadable, revert to original or return readable data from unreadable file
 	private enum Operation {
 		case cook
