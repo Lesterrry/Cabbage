@@ -383,6 +383,7 @@ class ViewController: NSViewController {
 	func drawImage(with data: Data) {
 		let imageView = NSImageView()
 		imageView.image = NSImage(data: data)
+		imageView.imageScaling = .scaleProportionallyUpOrDown
 		placeView(imageView)
 	}
 	/// Show 'This is a folder' message in the content view
@@ -431,13 +432,18 @@ class ViewController: NSViewController {
 		setControlViewEnabled(false)
 		DispatchQueue.main.async {
 			if self.alternateClickAction {
+				let cook: Bool!
+				if self.currentFileSequenceType == .cooked {
+					cook = false
+				} else {
+					cook = true
+				}
 				for i in 0 ..< self.files.count {
-					do {
-						self.files[i] = try Kitchen.workCulinaryMiracle(with: self.files[i], using: self.fileManager)
-					} catch {
-						#if DEBUG
-						fatalError()
-						#endif
+					if let f = try? (cook ?
+										Kitchen.cook(self.files[i], using: self.fileManager) :
+										Kitchen.uncook(self.files[i], using: self.fileManager)
+					) {
+						self.files[i] = f
 					}
 				}
 			} else {
