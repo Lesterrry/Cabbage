@@ -344,6 +344,7 @@ class ViewController: NSViewController {
 		panel.allowsMultipleSelection = true
 		panel.canChooseDirectories = true
 		if panel.runModal() == .OK {
+			currentIndex = 0
 			guard panel.urls.count > 0 else {
 				files = []
 				return
