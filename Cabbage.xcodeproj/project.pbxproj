@@ -287,17 +287,19 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 0;
+				CURRENT_PROJECT_VERSION = 2;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 9Q6UB3UBW7;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = Cabbage/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Cabbage [DEBUG]";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = "0.2.0-beta";
-				PRODUCT_BUNDLE_IDENTIFIER = com.Lestercovey.Cabbage;
+				PRODUCT_BUNDLE_IDENTIFIER = com.aydarmedia.cabbage;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 			};
@@ -312,17 +314,19 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 0;
+				CURRENT_PROJECT_VERSION = 2;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 9Q6UB3UBW7;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = Cabbage/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Cabbage;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = "0.2.0-beta";
-				PRODUCT_BUNDLE_IDENTIFIER = com.Lestercovey.Cabbage;
+				PRODUCT_BUNDLE_IDENTIFIER = com.aydarmedia.cabbage;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 			};
