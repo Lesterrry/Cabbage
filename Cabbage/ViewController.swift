@@ -426,7 +426,7 @@ class ViewController: NSViewController {
 	
 	/// Cook or uncook current file or all files in the sequence (if alt. action is enabled)
 	func tryCook() {
-		guard files.count > 0 else {
+        guard files.count > 0 && currentFileType != .unknown else {
 			return
 		}
 		drawCooking()
